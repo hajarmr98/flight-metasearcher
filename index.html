@@ -10,19 +10,18 @@
 
 <body>
     <h1>Elige el vuelo de tus sueños</h1>
-    <form action="#" class="buscador" method="get">
-        <div class="buscador-fechaida">
-            <label for="fechaida">Fecha de ida</label>
-            <input type="date" id="fechaida" name="fechaida" tabindex="1" autofocus="autofocus">
-        </div>
-        <div class="buscador-fechavuelta">
-            <label for="fechavuelta">Fecha de vuelta</label>
-            <input type="date" id="fechavuelta" name="fechavuelta" tabindex="2" autofocus="autofocus">
-        </div>
-        <div class="buscador-origen">
-            <label for="origen">Origen</label>
-            <input list="paises" name="origen" /></label>
-            <datalist id="paises">
+    <form action="#" method="get">
+        <div class="buscador">
+            <div class="buscador-fecha">
+                <label for="fechaida">Fecha de ida</label>
+                <input type="date" id="fechaida" name="fechaida" tabindex="1" autofocus="autofocus">
+                <label for="fechavuelta">Fecha de vuelta</label>
+                <input type="date" id="fechavuelta" name="fechavuelta" tabindex="2" autofocus="autofocus">
+            </div>
+            <div class="buscador-pais">
+                <label for="origen">Origen</label>
+                <input list="paises" name="origen" /></label>
+                <datalist id="paises">
         <option value="España">
         <option value="Reino Unido">
         <option value="Francia"></option>
@@ -30,18 +29,20 @@
         <option value="Alemania"></option>
         <option value="Finlandia"></option>
         </datalist>
-        </div>
-        <div class="buscador-destino">
-            <label for="destino">Destino</label>
-            <input list="paises" name="destino" /></label>
-        </div>
-        <div class="buscador-pasajeros">
-            <label for="adultos">Adultos</label>
-            <input type="number" id="adultos" name="adultos" min="1" tabindex="4" autofocus="autofocus">
-            <label for="ninios">Niños</label>
-            <input type="number" id="ninios" name="ninios" min="0" tabindex="5" autofocus="autofocus">
-            <label for="bebes">Bebes</label>
-            <input type="number" id="bebes" name="bebes" min="0" tabindex="6" autofocus="autofocus">
+                <label for="destino">Destino</label>
+                <input list="paises" name="destino" /></label>
+            </div>
+            <div class="buscador-pasajeros">
+                <label for="adultos">Adultos</label>
+                <input type="number" id="adultos" name="adultos" min="1" tabindex="4" autofocus="autofocus">
+                <label for="ninios">Niños</label>
+                <input type="number" id="ninios" name="ninios" min="0" tabindex="5" autofocus="autofocus">
+                <label for="bebes">Bebes</label>
+                <input type="number" id="bebes" name="bebes" min="0" tabindex="6" autofocus="autofocus">
+            </div>
+            <div>
+                <button class="buscar">Búscame</button>
+            </div>
         </div>
         <button>Buscar</button>
     </form>
