@@ -1,0 +1,130 @@
+BUSCADOR DE VUELOS
+proyecto
+-Barra de buscador. Campos:
+-Origen.
+-Destino.
+-Fecha de ida.
+-Fecha de vuelta. 
+-Nº de personas.
+-Boton de buscar.
+
+---Spinner---
+
+Selecciona un vuelo de ida, necesario. 
+-Horario de salida y llegada.
+-Boton de elegir el precio.
+
+Plus por maletas: 
+tarifa básica, optima y flexible.
+
+Selecciona un vuelo de vuelta.
+-Horario de salida y llegada.
+-Boton de precio. 
+
+Plus por maletas:
+tarifa básica, optima y flexible.
+
+Total: 79,51€. 
+Boton de Continuar.
+
+1 parte: front.
+
+
+
+
+
+
+
+
+
+AIR EUROPA:
+Pantalla de inicio:
+-Caja Llevame de: 
+-Caja A:
+-Boton de buscar.
+*Todo ello con otra caja que rodea toda la pestaña.
+
+Al pulsar en botón buscar: 
+-Caja de ida
+-Caja de vuelta
+-Caja de pasajeros.
+-Boton buscar (ha bajado a la fila creada).
+-Caja con desplegable: ¿Descuento de familia numerosa? Familia numerosa normal / Familia numerosa especial
+
+---Spinner---
+
+Selecciona vuelo de ida:
+PARTE IZQUIERDA: 
+-Ciudad de ida, hora 
+-Ciudad de llegada, hora
+-Tipo de vuelo: directo.
+-Duración: tiempo.
+-Operado: AIR Europa 
+
+PARTE DERECHA: Seleccionar precio: Barras superiores: Lite, Economy, Business Precio debajo de las barra superiores con el input radio. 
+Cuando pulsas el radio buton de lite, economy o business se sobreescribe y salen las condiciones del viaje: 
+Equipaje de mano
+Equipaje en bodega
+Cambios
+Cancelaciones
+Selección de asiento
+Priority Boarding y 
+
+-PARTE DERECHA INFERIOR: Boton de seleccionar vuelta: 
+Cuando pusas el radio buton de lite, economy o business se sobreescribe y salen las condiciones del viaje.
+
+Boton reservar. 
+
+A la derecha: 
+-Tu selección. 
+-Precio final
+-Boton reservar (EN PARTE INFERIOR DERECHA) 
+
+EN LATERAL DERECHO: 
+
+IDA | MAD07:30 - BCN08:55
+LUNES 7 SEPTIEMBRE - DIRECTO- 1 ESCALA- 1 ESCALAS
+MAD 07:30  BCN 08:55 LITE
+
+VUELTA | BCN11:50 - MAD13:20
+DOMINGO 13 SEPTIEMBRE - DIRECTO- 1 ESCALA- 1 ESCALAS
+BCN 11:50 MAD 13:20 LITE
+
+DESGLOSE DE PRECIOS
+BILLETE ADULTO (X 1)
+29
+TASAS Y RECARGOS
+40,59
+Footer con imagenes de métodos de pago (visa, mastercard...)
+
+
+
+https://www.aireuropa.com/es/vuelos/vuelos#/vuelos/from/MAD/to/BCN/ow/07-06-2020/adults/1/rt/07-12-2020/kids/0/babies/0/resident/false/business/false
+
+REUNIÓN DE LOS ALFAS: 
+
+URL PARA LA PETICIÓN:
+**Tenemos que revisar si nos devuelve los vuelos de vuelta (si no lo devuelve, hay que ponerlo en la URL).
+`https://${url}/vuelos/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/babies/${bebes}`
+
+
+const url= www.aireuropa.com
+const origen = MAD
+const destino = BCN
+const ida = 07-06-2020
+const vuelta = 07-12-2020
+const adultos = 1 ****Siempre será 1 mínimo.
+const ninios = 0
+const bebes = 0
+
+INPUTS A CREAR: 
+·Tipo date: fecha de ida
+·Tipo date: fecha de vuelta
+·Tipo datalist: Origen
+            ejemplo: 
+                        <input list="marcas" name="Marcas" /></label>
+                        <datalist id="marcas">
+                        <option value="specialized">
+·Tipo datalist: Destino
+·Lista: Pasajeros: adulto / niño / bebe. Y botones on click +/- número.
+

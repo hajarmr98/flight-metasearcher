@@ -1,0 +1,24 @@
+URL PARA LA PETICIÓN:
+**Tenemos que revisar si nos devuelve los vuelos de vuelta (si no lo devuelve, hay que ponerlo en la URL).
+`https://${url}/vuelos/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/babies/${bebes}`
+
+
+const url= www.aireuropa.com
+const origen = MAD
+const destino = BCN
+const ida = 07-06-2020
+const vuelta = 07-12-2020
+const adultos = 1 ****Siempre será 1 mínimo.
+const ninios = 0
+const bebes = 0
+
+INPUTS A CREAR: 
+·Tipo date: fecha de ida
+·Tipo date: fecha de vuelta
+·Tipo datalist: Origen
+            ejemplo: 
+                        <input list="marcas" name="Marcas" /></label>
+                        <datalist id="marcas">
+                        <option value="specialized">
+·Tipo datalist: Destino
+·Lista: Pasajeros: adulto / niño / bebe. Y botones on click +/- número.
