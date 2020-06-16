@@ -1,10 +1,37 @@
+h1 {
+    text-align: center;
+}
+
 .buscador {
     display: flex;
-    justify-content: space-evenly;
-    flex-flow: column wrap;
-    height: 200px;
+    height: 400px;
+    justify-content: space-around;
+    flex-direction: column;
+    width: 50%;
+    margin: 0 auto;
+    background-color: aquamarine;
+    padding: 30px;
+    align-items: center;
 }
 
 .buscador-fecha {
     display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.buscador-pais {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.buscador-pasajeros {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.buscar {
+    width: 100%
 }
