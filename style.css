@@ -35,3 +35,24 @@ h1 {
 .buscar {
     width: 100%
 }
+
+.caja-vuelo {
+    display: flex;
+    justify-content: space-around;
+}
+
+.caja-vuelo:hover {
+    background-color: grey
+}
+
+.caja-origen {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.caja-destino {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+}
