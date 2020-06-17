@@ -39,19 +39,21 @@ h1 {
 .caja-vuelo {
     display: flex;
     justify-content: space-around;
+    background-color: aquamarine;
+    cursor: pointer
 }
 
 .caja-vuelo:hover {
-    background-color: grey
+    background-color: blue
 }
 
-.caja-origen {
+.caja-ida {
     display: flex;
     justify-content: space-around;
     flex-direction: column;
 }
 
-.caja-destino {
+.caja-vuelta {
     display: flex;
     justify-content: space-around;
     flex-direction: column;
