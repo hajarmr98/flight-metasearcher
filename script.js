@@ -39,7 +39,11 @@ let recolectarDatos = () => {
 
 // Origen y destino son otro objeto
 
-let pintarVuelo = ({origen, destino, horarioI, horarioV,precio}) => {
+let pintarVuelo = ({origin,destiny,price}) => {
+    const {aeropuertoSalida, origen, horarioSalida } = origin
+    const {aeropuertoLlegada, destino, horarioLLegada} = origin
+    console.log('Empieza pintado???')
+    let $$main = document.getElementsByTagName('main')[0]
     let cajaVuelo = document.createElement('div')
     let cajaIda = document.createElement('article')
     let cajaVuelta = document.createElement('article')
@@ -47,12 +51,45 @@ let pintarVuelo = ({origen, destino, horarioI, horarioV,precio}) => {
     let cajaPrecio = document.createElement('article')
 
     let aeropuertoIda = document.createElement('p')
-    aeropuertoIda.innerText = origen.aeropuerto
+    aeropuertoIda.innerText = aeropuertoSalida
     let origenIda = document.createElement('p')
+    origenIda.innerText = origen
     let horaIda = document.createElement('p')
+    horaIda.innerText = horarioSalida
 
-    let aeropuertoVuelta = document.createElement('p')
-    let origenVuelta = document.createElement('p')
-    let horaVuelta = document.createElement('p')
+    let aeropuertoDestino = document.createElement('p')
+    aeropuertoDestino.innerText = aeropuertoLlegada
+    let Destino = document.createElement('p')
+    Destino.innerText = destino
+    let horaDestino = document.createElement('p')
+    horaDestino.innerText = horarioLLegada
+
+    
+    let duracion = document.createElement('p')
+    duracion.innerText = '1 hora'
+
+    let precio = document.createElement('p')
+    precio.innerText = 1500
+
+
+    cajaIda.appendChild(aeropuertoIda)
+    cajaIda.appendChild(origenIda)
+    cajaIda.appendChild(horaIda)
+
+    cajaVuelta.appendChild(aeropuertoDestino)
+    cajaVuelta.appendChild(Destino)
+    cajaVuelta.appendChild(horaDestino)
+
+    cajaDuracion.appendChild(duracion)
+
+    cajaPrecio.appendChild(precio)
+
+
+    cajaVuelo.appendChild(cajaIda)
+    cajaVuelo.appendChild(cajaVuelta)
+    cajaVuelo.appendChild(cajaDuracion)
+    cajaVuelo.appendChild(cajaPrecio)
+
+    $$main.appendChild(cajaVuelo)
 
 }
