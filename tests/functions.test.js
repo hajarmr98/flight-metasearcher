@@ -76,6 +76,5 @@ describe('----- FUNCIONES -----', () => {
         test('El valor de adultos es un string vacio',() => {
             expect(comprobarDatos(vuelo7)).toBeFalsy()
         })
-
     })
 })
