@@ -1,0 +1,23 @@
+{
+  "name": "metabuscador-de-vuelos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "jest": "^26.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silvialcastilla/metabuscador-de-vuelos.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/silvialcastilla/metabuscador-de-vuelos/issues"
+  },
+  "homepage": "https://github.com/silvialcastilla/metabuscador-de-vuelos#readme"
+}
