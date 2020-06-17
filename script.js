@@ -1,15 +1,13 @@
-
 document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     e.preventDefault();
     
     let vuelo = recolectarDatos()
 
-    comprobarDatos(vuelo).then( data =>{
-        if(data){
-            buscadorAvion(vuelo)
-        }else {
-            alert('faltan campos')
-        }
+    if(comprobarDatos(vuelo)){
+        buscadorAvion(vuelo)
+    } else {
+        alert('Hay campos vacios')
+    }
     })
 
 })
@@ -22,7 +20,7 @@ let buscadorAvion = async ({origen, destino, ida, vuelta, adultos, ninios, bebes
 }
 
 
-let comprobarDatos = async ({origen, destino, ida, vuelta, adultos}) => {
+let comprobarDatos =  ({origen, destino, ida, vuelta, adultos}) => {
     if(origen === '' || destino === '' || ida === '' || vuelta === '' || adultos === ''){
         return false
     } else {
@@ -31,22 +29,14 @@ let comprobarDatos = async ({origen, destino, ida, vuelta, adultos}) => {
 }
 
 let recolectarDatos = () => {
-    let fechaIda = document.getElementById('fechaida').value
-    let fechaVuelta = document.getElementById('fechavuelta').value
-    let vueloIda = document.getElementById('vuelo-origen').value
-    let vueloVuelta = document.getElementById('vuelo-vuelta').value
-    let cantidadAdultos = document.getElementById('adultos').value
-    let cantidadNiños = document.getElementById('ninios').value
-    let cantidadBebes = document.getElementById('bebes').value
 
-    let vuelo = {
-        origen: vueloIda,
-        destino: vueloVuelta,
-        ida: fechaIda,
-        vuelta: fechaVuelta,
-        adultos: cantidadAdultos,
-        ninios: cantidadNiños,
-        bebes: cantidadBebes,
+    return vuelo = {
+        origen: document.getElementById('fechaida').value,
+        destino: document.getElementById('fechavuelta').value,
+        ida: document.getElementById('vuelo-origen').value,
+        vuelta: document.getElementById('vuelo-vuelta').value,
+        adultos: document.getElementById('adultos').value,
+        ninios: document.getElementById('ninios').value,
+        bebes: document.getElementById('bebes').value
     }
-    return vuelo
 }
