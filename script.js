@@ -8,7 +8,6 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     } else {
         alert('Hay campos vacios')
     }
-    })
 
 })
 
@@ -16,9 +15,7 @@ let buscadorAvion = async ({origen, destino, ida, vuelta, adultos, ninios, bebes
     let res = await fetch(`https:/${url}/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/babies/${bebes}`)
     let datos = await res.json()
     console.log(datos)
-
 }
-
 
 let comprobarDatos =  ({origen, destino, ida, vuelta, adultos}) => {
     if(origen === '' || destino === '' || ida === '' || vuelta === '' || adultos === ''){
