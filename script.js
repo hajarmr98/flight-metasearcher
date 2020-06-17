@@ -37,11 +37,9 @@ let recolectarDatos = () => {
     }
 }
 
-// Origen y destino son otro objeto
-
 let pintarVuelo = ({origin,destiny,price}) => {
     const {aeropuertoSalida, origen, horarioSalida } = origin
-    const {aeropuertoLlegada, destino, horarioLLegada} = origin
+    const {aeropuertoLlegada, destino, horarioLLegada} = destiny
     console.log('Empieza pintado???')
     let $$main = document.getElementsByTagName('main')[0]
     let cajaVuelo = document.createElement('div')
@@ -69,22 +67,17 @@ let pintarVuelo = ({origin,destiny,price}) => {
     duracion.innerText = '1 hora'
 
     let precio = document.createElement('p')
-    precio.innerText = 1500
+    precio.innerText = price
 
 
     cajaIda.appendChild(aeropuertoIda)
     cajaIda.appendChild(origenIda)
     cajaIda.appendChild(horaIda)
-
     cajaVuelta.appendChild(aeropuertoDestino)
     cajaVuelta.appendChild(Destino)
     cajaVuelta.appendChild(horaDestino)
-
     cajaDuracion.appendChild(duracion)
-
     cajaPrecio.appendChild(precio)
-
-
     cajaVuelo.appendChild(cajaIda)
     cajaVuelo.appendChild(cajaVuelta)
     cajaVuelo.appendChild(cajaDuracion)
