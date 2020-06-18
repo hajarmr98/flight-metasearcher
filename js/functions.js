@@ -20,9 +20,9 @@ export let recolectarDatos = () => {
 }
 
 export let pintarVuelo = ({origin,destiny,price}) => {
-    const {aeropuertoSalida, origen, horarioSalida } = origin
-    const {aeropuertoLlegada, destino, horarioLLegada} = destiny
-    console.log('Empieza pintado???')
+    const {aeropuertoSalida, origen, horarioSalida, fechaSalida } = origin
+    const {aeropuertoLlegada, destino, horarioLLegada, fechaLlegada} = destiny
+
     let $$main = document.getElementsByTagName('main')[0]
     let cajaVuelo = document.createElement('div')
     cajaVuelo.setAttribute('class', 'caja-vuelo')
@@ -71,4 +71,4 @@ export let pintarVuelo = ({origin,destiny,price}) => {
 
 }
 
-module.exports = { comprobarDatos, recolectarDatos, pintarVuelo}
+// module.exports = { comprobarDatos, recolectarDatos, pintarVuelo }
