@@ -8,16 +8,24 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     new FormData(document.getElementsByTagName('form')[0])
     // buscadorAvion(vuelo)
     }
-    })
+})
     
     
+<<<<<<< HEAD
     // let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
     // let res = await fetch(`http://127.0.0.1:5500/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/babies/${bebes}`)
     // let datos = await res.json()
     // pintarVuelo(datos)
     // }
+=======
+/*let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
+let res = await fetch(`http://127.0.0.1:5500/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/babies/${bebes}`)
+let datos = await res.json()
+pintarVuelo(datos)
+}*/
+>>>>>>> 4239b6afdb89a570cb9331bf4eb29c3651568a48
     
-    document.addEventListener("formdata", event => {
+document.addEventListener("formdata", event => {
     
     let vuelo = {
     ida : event.target[0].value,
@@ -39,17 +47,18 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     pintarVuelo(jsonResponse.datosIda)
     pintarVuelo(jsonResponse.datosVuelta)
     };
-    });
+});
     
-    let comprobarDatos = ({ origen, destino, ida, vuelta, adultos }) => {
+    
+let comprobarDatos = ({ origen, destino, ida, vuelta, adultos }) => {
     if (origen === '' || destino === '' || ida === '' || vuelta === '' || adultos === '') {
     return false
     } else {
     return true
     }
-    }
+}
     
-    let recolectarDatos = () => {
+let recolectarDatos = () => {
     return {
     origen: document.getElementById('vuelo-origen').value,
     destino: document.getElementById('vuelo-vuelta').value,
@@ -59,9 +68,9 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     ninios: document.getElementById('ninios').value,
     bebes: document.getElementById('bebes').value
     }
-    }
+}
     
-    let pintarVuelo = ({origin,destiny,price}) => {
+let pintarVuelo = ({origin,destiny,price}) => {
     
     const { aeropuertoSalida, origen, horarioSalida, fechaSalida } = origin
     const { aeropuertoLlegada, destino, horarioLlegada, fechaLlegada } = destiny
@@ -114,5 +123,5 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     cajaVuelo.appendChild(cajaDuracion)
     cajaVuelo.appendChild(cajaPrecio)
     $$main.appendChild(cajaVuelo)
-    }
+}
     
