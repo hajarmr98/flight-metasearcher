@@ -6,16 +6,16 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     alert('Rellena los datos')
     } else {
     new FormData(document.getElementsByTagName('form')[0])
-    //buscadorAvion(vuelo)
+    // buscadorAvion(vuelo)
     }
     })
     
     
-    /*let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
-    let res = await fetch(`http://127.0.0.1:5500/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/babies/${bebes}`)
-    let datos = await res.json()
-    pintarVuelo(datos)
-    }*/
+    // let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
+    // let res = await fetch(`http://127.0.0.1:5500/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/babies/${bebes}`)
+    // let datos = await res.json()
+    // pintarVuelo(datos)
+    // }
     
     document.addEventListener("formdata", event => {
     
@@ -29,6 +29,7 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     bebes : event.target[6].value,
     
     }
+
     const request = new XMLHttpRequest();
     request.open("GET", `http://127.0.0.1:5500/flights/from/${vuelo.origen}/to/${vuelo.destino}/date_1/${vuelo.ida}/adults/${vuelo.adultos}/date_2/${vuelo.vuelta}/kids/${vuelo.ninios}/babies/${vuelo.bebes}`);
     request.send(vuelo);
