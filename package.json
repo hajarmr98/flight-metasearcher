@@ -2,23 +2,40 @@
   "name": "metabuscador-de-vuelos",
   "version": "1.0.0",
   "description": "",
+<<<<<<< HEAD
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "e2e" : "cypress open"
+=======
+  "main": "app.js",
+  "dependencies": {
+    "jest": "^26.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+>>>>>>> 09c2961ac9a36b526f211ffe25d99cf5202615e3
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/silvialcastilla/metabuscador-de-vuelos.git"
   },
+<<<<<<< HEAD
   "keywords": [],
+=======
+>>>>>>> 09c2961ac9a36b526f211ffe25d99cf5202615e3
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/silvialcastilla/metabuscador-de-vuelos/issues"
   },
+<<<<<<< HEAD
   "homepage": "https://github.com/silvialcastilla/metabuscador-de-vuelos#readme",
   "devDependencies": {
     "cypress": "^4.8.0"
   }
+=======
+  "homepage": "https://github.com/silvialcastilla/metabuscador-de-vuelos#readme"
+>>>>>>> 09c2961ac9a36b526f211ffe25d99cf5202615e3
 }
