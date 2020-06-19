@@ -93,6 +93,7 @@ input {
 }
 #ninios {
   background-image: url("img/ninio.png");
+  width: 50px;
 }
 #bebes {
   background-image: url("img/baby.png");
@@ -113,3 +114,22 @@ input {
   color: #6c464e;
   width: 200px;
 }
+.niños{
+  display: flex;
+}
+
+.icon{
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+
+.icon:hover {
+  opacity: .8;
+}
+
+.edad{
+  display: none;
+  width: 150px;
+}
+
