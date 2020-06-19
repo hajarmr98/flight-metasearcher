@@ -11,12 +11,37 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
 })
     
     
-    // let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
-    // let res = await fetch(`http://127.0.0.1:5500/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/babies/${bebes}`)
-    // let datos = await res.json()
-    // pintarVuelo(datos)
-    // }
-    
+// let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, edad }) => {
+// let res = await fetch(`http://127.0.0.1:5500/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${edad}`)
+// let datos = await res.json()
+// pintarVuelo(datos)
+// }
+
+document.getElementsByClassName('icon')[0].addEventListener('click', () => {
+    let valueAntiguo = Number(document.getElementById('ninios').value)
+    valueNuevo = String(valueAntiguo-1)
+    if(valueAntiguo > 0 ){
+        document.getElementById('ninios').value = valueNuevo
+    }
+    if(Number(document.getElementById('ninios').value) === 0 ){
+        document.getElementsByClassName('edad')[0].style.display = 'none'
+        document.getElementsByClassName('edad')[1].style.display = 'none'
+    }
+})
+
+document.getElementsByClassName('icon')[1].addEventListener('click', () => {
+    let valueAntiguo = Number(document.getElementById('ninios').value)
+    valueNuevo = String(valueAntiguo+1)
+    document.getElementById('ninios').value = valueNuevo
+    if(Number(document.getElementById('ninios').value) > 0 ){
+        document.getElementsByClassName('edad')[0].style.display = 'block'
+        document.getElementsByClassName('edad')[1].style.display = 'block'
+    }
+})
+
+
+
+
 document.addEventListener("formdata", event => {
     
     let vuelo = {
@@ -58,7 +83,7 @@ let recolectarDatos = () => {
     vuelta: document.getElementById('fechavuelta').value,
     adultos: document.getElementById('adultos').value,
     ninios: document.getElementById('ninios').value,
-    bebes: document.getElementById('bebes').value
+    edad: document.getElementById('edadNinio').value
     }
 }
 

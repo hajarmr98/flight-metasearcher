@@ -36,12 +36,42 @@
                     <input list="paises" id="vuelo-vuelta" name="destino" tabindex="4"/></label>
                 </div>
                 <div class="buscador-pasajeros">
+<<<<<<< HEAD
                     <label for="adultos">Adultos</label>
                     <input type="number" id="adultos" name="adultos" min="1" tabindex="5" autofocus="autofocus">
                     <label for="ninios">Niños</label>
                     <input type="number" id="ninios" name="ninios" min="0" tabindex="6" autofocus="autofocus" value="0">
                     <label for="bebes">Bebes</label>
                     <input type="number" id="bebes" name="bebes" min="0" tabindex="7" autofocus="autofocus" value="0">
+=======
+                    <label for="adultos">Adultos:</label>
+                    <input type="number" id="adultos" name="adultos" min="1" tabindex="4" autofocus="autofocus">
+                    <label for="ninios">Niños:</label>
+                    <div class="niños">
+                        <input type="text" id="ninios" name="cantidad_ninios" min="0" tabindex="5" value="0" pattern="/\d+/" title="Solo valores númericos">
+                        <img src="img/minus.png" alt="logo-minus" class="icon">
+                        <img src="img/plus.png" alt="logo-plus" class="icon">
+                    </div>    
+                    <label for="edad" class="edad">Edad del niño:</label>
+                        <select class="edad" name="edad_nino" id="edadNinio">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                        </select>
+>>>>>>> 7ba7c44dd52231332e511c1168ae0418999bf6d3
                 </div>
                 <div>
                     <button class="buscar">Búscame</button>
