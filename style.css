@@ -30,6 +30,7 @@ input {
   padding: 50px 70px;
   align-items: center;
   font-size: 24px;
+  margin-bottom: 40px;
 }
 
 .buscador-fecha {
@@ -56,25 +57,31 @@ input {
 
 .caja-vuelo {
   display: flex;
+  height: 200px;
   justify-content: space-around;
-  background-color: aquamarine;
-  cursor: pointer;
-}
-
-.caja-vuelo:hover {
-  background-color: blue;
+  width: 60%;
+  margin: 0 auto;
+  color: #6c464e;
+  background-color:rgba(255, 255, 255, 0.8);
+  padding: 50px 70px;
+  align-items: center;
+  font-size: 24px;
+  margin-bottom: 15px;
+  border-radius:  15px;
 }
 
 .caja-ida {
   display: flex;
-  justify-content: space-around;
   flex-direction: column;
 }
 
 .caja-vuelta {
   display: flex;
-  justify-content: space-around;
   flex-direction: column;
+}
+.caja-duracion {
+  display: flex;
+  justify-content: center;
 }
 #adultos, #ninios, #bebes{
   background-size: 12px;
@@ -113,6 +120,58 @@ input {
   font-size: 18px ;
   color: #6c464e;
   width: 200px;
+}
+.imagen {
+  height: 50px;
+}
+.duracion {
+
+  font-size: 20px;
+  margin-top: 0px;
+  text-align: start;
+
+}
+.title{
+  color: #CE7DA5;
+    text-shadow:
+   -1px -1px 0 #fff,  
+    1px -1px 0 #fff,
+   -1px 1px 0 #fff,
+    1px 1px 0 #fff;
+}
+.aeropuerto{
+  margin: 0px;
+}
+.ciudad{
+  font-size: 50px;
+  margin: 0px;
+  color: grey;
+}
+.fecha{
+  margin: 0px;
+}
+.hora{
+  margin: 0px;
+}
+.precio{
+  margin: 0px;
+  background-color: #6c464e;
+  color: white;
+  padding: 25px;
+  border-radius: 15px;
+  background-image: linear-gradient(
+    rgba(250, 112, 154, 0.59),
+    rgba(254, 225, 64, 0.62)
+  );
+}
+
+.caja-precio p:last-child {
+  font-size: 18px;
+  text-align:center;
+  text-transform: uppercase;
+  color: orange;
+  background-color: black;
+  border-radius: 15px;
 }
 .niños{
   display: flex;

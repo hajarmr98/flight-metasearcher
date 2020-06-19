@@ -23,7 +23,7 @@
                 </div>
                 <div class="buscador-pais">
                     <label for="origen">Origen</label>
-                    <input list="paises" id="vuelo-origen" name="origen" /></label>
+                    <input list="paises" id="vuelo-origen" name="origen" tabindex="3"/></label>
                     <datalist id="paises">
             <option value="España">
             <option value="Reino Unido">
@@ -33,11 +33,11 @@
             <option value="Finlandia"></option>
             </datalist>
                     <label for="destino">Destino</label>
-                    <input list="paises" id="vuelo-vuelta" name="destino" /></label>
+                    <input list="paises" id="vuelo-vuelta" name="destino" tabindex="4"/></label>
                 </div>
                 <div class="buscador-pasajeros">
                     <label for="adultos">Adultos:</label>
-                    <input type="number" id="adultos" name="adultos" min="1" tabindex="4" autofocus="autofocus">
+                    <input type="number" id="adultos" name="adultos" min="1" tabindex="4" autofocus="autofocus" value="1">
                     <label for="ninios">Niños:</label>
                     <div class="niños">
                         <input type="text" id="ninios" name="cantidad_ninios" min="0" tabindex="5" value="0" pattern="\d+" title="Solo valores númericos">
