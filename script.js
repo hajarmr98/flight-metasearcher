@@ -87,42 +87,7 @@ let recolectarDatos = () => {
     }
 }
 
-let resultado = {
-    vueloIda:{
-        title: 'Vuelo de ida',
-        empresa: 'Iberia',
-        origin: {
-            aeropuertoSalida: 'BARAJAS',
-            origen: 'MADRID',
-            horarioSalida: '14:00',
-            fechaSalida: 'DATE'
-        },
-        destiny: {
-            aeropuertoLlegada: 'BERGAMO',
-            destino: 'MILAN',
-            horarioLlegada: '16:00',
-            fechaLlegada: 'DATE'
-        },
-        price: '1500$'
-    },
-    vueloSalida:{
-        title: 'Vuelo de vuelta',
-        empresa: 'Iberia',
-        origin: {
-            aeropuertoSalida: 'BARAJAS',
-            origen: 'MADRID',
-            horarioSalida: '14:00',
-            fechaSalida: 'DATE'
-        },
-        destiny: {
-            aeropuertoLlegada: 'BERGAMO',
-            destino: 'MILAN',
-            horarioLlegada: '16:00',
-            fechaLlegada: 'DATE'
-        },
-        price: '1500$'
-    },
-}
+
 
 let pintarVuelo = ({title,empresa,origin,destiny,price}) => {
     
