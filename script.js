@@ -1,16 +1,32 @@
 document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     e.preventDefault();
     let vuelo = recolectarDatos()
-    
+
     if (!comprobarDatos(vuelo)) {
-    alert('Rellena los datos')
+        alert('Rellena los datos')
     } else {
-    new FormData(document.getElementsByTagName('form')[0])
-    // buscadorAvion(vuelo)
+        new FormData(document.getElementsByTagName('form')[0])
     }
 })
-    
-    
+
+datosIda = {
+    title: 'Vuelo de ida',
+    empresa: 'Iberia',
+    origin: {
+        aeropuertoSalida: 'BARAJAS',
+        origen: 'MADRID',
+        horarioSalida: '14:00',
+        fechaSalida: 'DATE'
+    },
+    destiny: {
+        aeropuertoLlegada: 'BERGAMO',
+        destino: 'MILAN',
+        horarioLlegada: '16:00',
+        fechaLlegada: 'DATE'
+    },
+    price: '1500$'
+}
+
 // let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, edad }) => {
 // let res = await fetch(`http://127.0.0.1:5500/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${edad}`)
 // let datos = await res.json()
@@ -19,11 +35,11 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
 
 document.getElementsByClassName('icon')[0].addEventListener('click', () => {
     let valueAntiguo = Number(document.getElementById('ninios').value)
-    valueNuevo = String(valueAntiguo-1)
-    if(valueAntiguo > 0 ){
+    valueNuevo = String(valueAntiguo - 1)
+    if (valueAntiguo > 0) {
         document.getElementById('ninios').value = valueNuevo
     }
-    if(Number(document.getElementById('ninios').value) === 0 ){
+    if (Number(document.getElementById('ninios').value) === 0) {
         document.getElementsByClassName('edad')[0].style.display = 'none'
         document.getElementsByClassName('edad')[1].style.display = 'none'
     }
@@ -31,9 +47,9 @@ document.getElementsByClassName('icon')[0].addEventListener('click', () => {
 
 document.getElementsByClassName('icon')[1].addEventListener('click', () => {
     let valueAntiguo = Number(document.getElementById('ninios').value)
-    valueNuevo = String(valueAntiguo+1)
+    valueNuevo = String(valueAntiguo + 1)
     document.getElementById('ninios').value = valueNuevo
-    if(Number(document.getElementById('ninios').value) > 0 ){
+    if (Number(document.getElementById('ninios').value) > 0) {
         document.getElementsByClassName('edad')[0].style.display = 'block'
         document.getElementsByClassName('edad')[1].style.display = 'block'
     }
@@ -43,54 +59,56 @@ document.getElementsByClassName('icon')[1].addEventListener('click', () => {
 
 
 document.addEventListener("formdata", event => {
-    
+
     let vuelo = {
-    ida : event.target[0].value,
-    vuelta : event.target[1].value,
-    origen : event.target[2].value,
-    destino : event.target[3].value,
-    adultos : event.target[4].value,
-    ninios : event.target[5].value,
-    bebes : event.target[6].value,
-    
+        ida: event.target[0].value,
+        vuelta: event.target[1].value,
+        origen: event.target[2].value,
+        destino: event.target[3].value,
+        adultos: event.target[4].value,
+        ninios: event.target[5].value,
+        bebes: event.target[6].value,
+
     }
+
+    pintarVuelo(datosIda)
 
     const request = new XMLHttpRequest();
     request.open("GET", `http://127.0.0.1:5500/flights/from/${vuelo.origen}/to/${vuelo.destino}/date_1/${vuelo.ida}/adults/${vuelo.adultos}/date_2/${vuelo.vuelta}/kids/${vuelo.ninios}/babies/${vuelo.bebes}`);
     request.send(vuelo);
     // get the response
     request.onload = function() {
-    const jsonResponse = JSON.parse(this.response);
-    pintarVuelo(jsonResponse.datosIda)
-    pintarVuelo(jsonResponse.datosVuelta)
+        const jsonResponse = JSON.parse(this.response);
+        pintarVuelo(jsonResponse.datosIda)
+        pintarVuelo(jsonResponse.datosVuelta)
     };
 });
-    
-    
+
+
 let comprobarDatos = ({ origen, destino, ida, vuelta, adultos }) => {
     if (origen === '' || destino === '' || ida === '' || vuelta === '' || adultos === '') {
-    return false
+        return false
     } else {
-    return true
+        return true
     }
 }
-    
+
 let recolectarDatos = () => {
     return {
-    origen: document.getElementById('vuelo-origen').value,
-    destino: document.getElementById('vuelo-vuelta').value,
-    ida: document.getElementById('fechaida').value,
-    vuelta: document.getElementById('fechavuelta').value,
-    adultos: document.getElementById('adultos').value,
-    ninios: document.getElementById('ninios').value,
-    edad: document.getElementById('edadNinio').value
+        origen: document.getElementById('vuelo-origen').value,
+        destino: document.getElementById('vuelo-vuelta').value,
+        ida: document.getElementById('fechaida').value,
+        vuelta: document.getElementById('fechavuelta').value,
+        adultos: document.getElementById('adultos').value,
+        ninios: document.getElementById('ninios').value,
+        edad: document.getElementById('edadNinio').value
     }
 }
 
 
 
-let pintarVuelo = ({title,empresa,origin,destiny,price}) => {
-    
+let pintarVuelo = ({ title, empresa, origin, destiny, price }) => {
+
     const { aeropuertoSalida, origen, horarioSalida, fechaSalida } = origin
     const { aeropuertoLlegada, destino, horarioLlegada, fechaLlegada } = destiny
     let $$main = document.getElementsByTagName('main')[0]
@@ -104,56 +122,56 @@ let pintarVuelo = ({title,empresa,origin,destiny,price}) => {
     let cajaVuelta = document.createElement('article')
     cajaVuelta.setAttribute('class', 'caja-vuelta')
 
-    
+
     let salidaTitle = document.createElement('h2')
     salidaTitle.innerText = title
-    salidaTitle.setAttribute('class','title')
+    salidaTitle.setAttribute('class', 'title')
 
     let aeropuertoIda = document.createElement('p')
     aeropuertoIda.innerText = aeropuertoSalida
-    aeropuertoIda.setAttribute('class','aeropuerto')
+    aeropuertoIda.setAttribute('class', 'aeropuerto')
     let origenIda = document.createElement('p')
     origenIda.innerText = origen
-    origenIda.setAttribute('class','ciudad')
+    origenIda.setAttribute('class', 'ciudad')
     let salidaFecha = document.createElement('p')
     salidaFecha.innerText = fechaSalida
-    salidaFecha.setAttribute('class','fecha')
+    salidaFecha.setAttribute('class', 'fecha')
     let horaIda = document.createElement('p')
     horaIda.innerText = horarioSalida
-    horaIda.setAttribute('class','hora')
-    
+    horaIda.setAttribute('class', 'hora')
+
     let image = document.createElement('img')
-    if(title === 'Vuelo de ida'){
+    if (title === 'Vuelo de ida') {
         image.setAttribute('src', 'img/plane.png')
-    }else{
+    } else {
         image.setAttribute('src', 'img/plane2.png')
     }
     image.setAttribute('class', 'imagen')
     let duracion = document.createElement('p')
     duracion.innerText = '1 hora'
-    duracion.setAttribute('class','duracion')
+    duracion.setAttribute('class', 'duracion')
 
     let aeropuertoDestino = document.createElement('p')
     aeropuertoDestino.innerText = aeropuertoLlegada
-    aeropuertoDestino.setAttribute('class','aeropuerto')
+    aeropuertoDestino.setAttribute('class', 'aeropuerto')
     let Destino = document.createElement('p')
     Destino.innerText = destino
-    Destino.setAttribute('class','ciudad')
+    Destino.setAttribute('class', 'ciudad')
     let llegadaFecha = document.createElement('p')
     llegadaFecha.innerText = fechaLlegada
-    llegadaFecha.setAttribute('class','fecha')
+    llegadaFecha.setAttribute('class', 'fecha')
     let horaDestino = document.createElement('p')
     horaDestino.innerText = horarioLlegada
-    horaDestino.setAttribute('class','hora')
-    
+    horaDestino.setAttribute('class', 'hora')
 
-    
+
+
     let precio = document.createElement('p')
     precio.innerText = price
     let empresaVuelo = document.createElement('p')
     empresaVuelo.innerText = empresa
     precio.setAttribute('class', 'precio')
-    
+
     cajaVuelo.appendChild(salidaTitle)
     cajaIda.appendChild(aeropuertoIda)
     cajaIda.appendChild(origenIda)
@@ -173,4 +191,3 @@ let pintarVuelo = ({title,empresa,origin,destiny,price}) => {
     cajaVuelo.appendChild(cajaPrecio)
     $$main.appendChild(cajaVuelo)
 }
-
