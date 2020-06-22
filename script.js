@@ -9,24 +9,6 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     }
 })
 
-datosIda = {
-    title: 'Vuelo de ida',
-    empresa: 'Iberia',
-    origin: {
-        aeropuertoSalida: 'BARAJAS',
-        origen: 'MADRID',
-        horarioSalida: '14:00',
-        fechaSalida: 'DATE'
-    },
-    destiny: {
-        aeropuertoLlegada: 'BERGAMO',
-        destino: 'MILAN',
-        horarioLlegada: '16:00',
-        fechaLlegada: 'DATE'
-    },
-    price: '1500$'
-}
-
 // let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, edad }) => {
 // let res = await fetch(`http://127.0.0.1:5500/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${edad}`)
 // let datos = await res.json()
@@ -70,8 +52,6 @@ document.addEventListener("formdata", event => {
         bebes: event.target[6].value,
 
     }
-
-    pintarVuelo(datosIda)
 
     const request = new XMLHttpRequest();
     request.open("GET", `http://127.0.0.1:5500/flights/from/${vuelo.origen}/to/${vuelo.destino}/date_1/${vuelo.ida}/adults/${vuelo.adultos}/date_2/${vuelo.vuelta}/kids/${vuelo.ninios}/babies/${vuelo.bebes}`);
