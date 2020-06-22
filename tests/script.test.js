@@ -1,4 +1,4 @@
-const { comprobarDatos, pintarVuelo, recolectarDatos } = require('./script')
+const { comprobarDatos, pintarVuelo, recolectarDatos } = require('../public/script.js')
 
 describe('Funciones', () => {
     describe('Función comprobar datos', () => {

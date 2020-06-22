@@ -1,4 +1,4 @@
-const {comprobarDatos} = require('../js/functions.js');
+const {comprobarDatos} = require('../public/script.js');
 
 describe('----- FUNCIONES -----', () => {
     describe('---- FUNCION COMPROBARDATOS ----', () => {

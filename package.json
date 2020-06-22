@@ -2,7 +2,7 @@
   "name": "metabuscador-de-vuelos",
   "version": "1.0.0",
   "description": "",
-  "main": "script.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "e2e": "cypress open"
@@ -20,5 +20,9 @@
   "homepage": "https://github.com/silvialcastilla/metabuscador-de-vuelos#readme",
   "devDependencies": {
     "cypress": "^4.8.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "express": "^4.17.1"
   }
 }
