@@ -5,15 +5,17 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     if (!comprobarDatos(vuelo)) {
         alert('Rellena los datos')
     } else {
-        new FormData(document.getElementsByTagName('form')[0])
+        // new FormData(document.getElementsByTagName('form')[0])
+        buscadorAvion(vuelo)
     }
 })
 
-// let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, edad }) => {
-// let res = await fetch(`http://127.0.0.1:5500/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${edad}`)
-// let datos = await res.json()
-// pintarVuelo(datos)
-// }
+let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, edad }) => {
+let res = await fetch(`http://localhost:2424/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${edad}`)
+let datos = await res.json()
+pintarVuelo(datos.datosIda)
+pintarVuelo(datos.datosVuelta)
+}
 
 document.getElementsByClassName('icon')[0].addEventListener('click', () => {
     let valueAntiguo = Number(document.getElementById('ninios').value)
@@ -40,29 +42,29 @@ document.getElementsByClassName('icon')[1].addEventListener('click', () => {
 
 
 
-document.addEventListener("formdata", event => {
+// document.addEventListener("formdata", event => {
 
-    let vuelo = {
-        ida: event.target[0].value,
-        vuelta: event.target[1].value,
-        origen: event.target[2].value,
-        destino: event.target[3].value,
-        adultos: event.target[4].value,
-        ninios: event.target[5].value,
-        bebes: event.target[6].value,
+//     let vuelo = {
+//         ida: event.target[0].value,
+//         vuelta: event.target[1].value,
+//         origen: event.target[2].value,
+//         destino: event.target[3].value,
+//         adultos: event.target[4].value,
+//         ninios: event.target[5].value,
+//         bebes: event.target[6].value,
 
-    }
+//     }
 
-    const request = new XMLHttpRequest();
-    request.open("GET", `http://127.0.0.1:5500/flights/from/${vuelo.origen}/to/${vuelo.destino}/date_1/${vuelo.ida}/adults/${vuelo.adultos}/date_2/${vuelo.vuelta}/kids/${vuelo.ninios}/babies/${vuelo.bebes}`);
-    request.send(vuelo);
-    // get the response
-    request.onload = function() {
-        const jsonResponse = JSON.parse(this.response);
-        pintarVuelo(jsonResponse.datosIda)
-        pintarVuelo(jsonResponse.datosVuelta)
-    };
-});
+//     const request = new XMLHttpRequest();
+//     request.open("GET", `http://127.0.0.1:5500/flights/from/${vuelo.origen}/to/${vuelo.destino}/date_1/${vuelo.ida}/adults/${vuelo.adultos}/date_2/${vuelo.vuelta}/kids/${vuelo.ninios}/babies/${vuelo.bebes}`);
+//     request.send(vuelo);
+//     // get the response
+//     request.onload = function() {
+//         const jsonResponse = JSON.parse(this.response);
+//         pintarVuelo(jsonResponse.datosIda)
+//         pintarVuelo(jsonResponse.datosVuelta)
+//     };
+// });
 
 
 let comprobarDatos = ({ origen, destino, ida, vuelta, adultos }) => {
