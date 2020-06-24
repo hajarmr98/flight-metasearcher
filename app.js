@@ -4,7 +4,6 @@ const request = require('request')
 const puppeteer = require('puppeteer')
 const cheerio = require('cheerio')
 const fs = require('fs')
-const { resolve } = require('path')
 const port = 2424
 
 

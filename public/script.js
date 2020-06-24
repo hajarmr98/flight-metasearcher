@@ -89,8 +89,8 @@ let recolectarDatos = () => {
 
 
 
-let pintarVuelo = ({ title, empresa, origin, destiny, price }) => {
-
+let pintarVuelo = ({ title, empresa, origin, destiny, price,duration }) => {
+    
     const { aeropuertoSalida, origen, horarioSalida, fechaSalida } = origin
     const { aeropuertoLlegada, destino, horarioLlegada, fechaLlegada } = destiny
     let $$main = document.getElementsByTagName('main')[0]
@@ -130,7 +130,7 @@ let pintarVuelo = ({ title, empresa, origin, destiny, price }) => {
     }
     image.setAttribute('class', 'imagen')
     let duracion = document.createElement('p')
-    duracion.innerText = '1 hora'
+    duracion.innerText = duration
     duracion.setAttribute('class', 'duracion')
 
     let aeropuertoDestino = document.createElement('p')
