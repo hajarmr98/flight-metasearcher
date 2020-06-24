@@ -92,7 +92,7 @@ let recolectarDatos = () => {
 let pintarVuelo = ({ title, empresa, origin, destiny, price,duration }) => {
     
     const { aeropuertoSalida, origen, horarioSalida, fechaSalida } = origin
-    const { aeropuertoLlegada, destino, horarioLlegada, fechaLlegada } = destiny
+    const { aeropuertoLlegada, destino, horarioLlegada} = destiny
     let $$main = document.getElementsByTagName('main')[0]
     let cajaVuelo = document.createElement('div')
     cajaVuelo.setAttribute('class', 'caja-vuelo')
@@ -139,9 +139,6 @@ let pintarVuelo = ({ title, empresa, origin, destiny, price,duration }) => {
     let Destino = document.createElement('p')
     Destino.innerText = destino
     Destino.setAttribute('class', 'ciudad')
-    let llegadaFecha = document.createElement('p')
-    llegadaFecha.innerText = fechaLlegada
-    llegadaFecha.setAttribute('class', 'fecha')
     let horaDestino = document.createElement('p')
     horaDestino.innerText = horarioLlegada
     horaDestino.setAttribute('class', 'hora')
@@ -163,7 +160,6 @@ let pintarVuelo = ({ title, empresa, origin, destiny, price,duration }) => {
     cajaDuracion.appendChild(duracion)
     cajaVuelta.appendChild(aeropuertoDestino)
     cajaVuelta.appendChild(Destino)
-    cajaVuelta.appendChild(llegadaFecha)
     cajaVuelta.appendChild(horaDestino)
     cajaPrecio.appendChild(precio)
     cajaPrecio.appendChild(empresaVuelo)
