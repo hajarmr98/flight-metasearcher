@@ -3,11 +3,31 @@ const server = express()
 const request = require('request')
 const puppeteer = require('puppeteer')
 const cheerio = require('cheerio')
-const fs = require('fs')
+const axios = require('axios')
 const port = 2424
 
 
 server.use(express.static('public'))
+
+let buscarIata = async (origen,destino) => {
+    let response = {
+        ida:'',
+        vuelta:''
+    }
+    await axios.get(`http://api.aviationstack.com/v1/cities?access_key=17257fb3bb99b705fbba913e8d3cfcb8&city_name=${origen}`)
+    .then(res => {
+        response.ida = res.data.data[0].iata_code
+    })
+    await axios.get(`http://api.aviationstack.com/v1/cities?access_key=17257fb3bb99b705fbba913e8d3cfcb8&city_name=${destino}`)
+    .then(res => {
+        response.vuelta = res.data.data[0].iata_code
+    })
+
+    return response
+    // console.log(response)
+}
+
+console.log(buscarIata('Barcelona','Praga'))
 
 
 server.get('/',(req,res) => res.sendfile(__dirname + '/index.html'))
@@ -23,17 +43,20 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
         edad: req.params.edad
     }
     
-    let scrapearDatosCzech = async () => {
+    
+    let scrapearDatosCzech = async ({ida,vuelta}) => {
         let ret = {
             datosIda: '',
             datosVuelta: ''
         }
+        let url = `https://book.csa.cz/plnext/czech_DX/Override.action?TRAVELLER_TYPE_1=ADT&TRIP_FLOW=YES&BOOKING_FLOW=REVENUE&B_LOCATION_1=${ida}&E_LOCATION_1=${vuelta}&B_DATE_1=202010220000&B_ANY_TIME_1=TRUE&B_DATE_2=202010290000&B_ANY_TIME_2=TRUE&TRIP_TYPE=R&B_LOCATION_2=${vuelta}&E_LOCATION_2=${ida}&SO_SITE_POINT_OF_SALE=MAD&SO_SITE_USER_CURRENCY_CODE=&SO_SITE_MARKET_ID=ES&PRICING_TYPE=O&EMBEDDED_TRANSACTION=FlexPricerAvailability&DISPLAY_TYPE=2&ARRANGE_BY=D&REFRESH=0&COMMERCIAL_FARE_FAMILY_1=CFFOKWEB&DATE_RANGE_VALUE_1=3&DATE_RANGE_VALUE_2=3&DATE_RANGE_QUALIFIER_1=C&DATE_RANGE_QUALIFIER_2=C&EXTERNAL_ID=172.1.2.3&SITE=P02YP02Y&LANGUAGE=ES&SO_SITE_INS_MARKET_COUNTRY=ES&SO_SITE_AIRLINE_CODE=OK&SO_SITE_IS_INSURANCE_ENABLED=TRUE#/FPOW`
         try{
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
-            await page.goto("https://book.csa.cz/plnext/czech_DX/Override.action?TRAVELLER_TYPE_1=ADT&TRIP_FLOW=YES&BOOKING_FLOW=REVENUE&B_LOCATION_1=BCN&E_LOCATION_1=PRG&B_DATE_1=202010220000&B_ANY_TIME_1=TRUE&B_DATE_2=202010290000&B_ANY_TIME_2=TRUE&TRIP_TYPE=R&B_LOCATION_2=PRG&E_LOCATION_2=BCN&SO_SITE_POINT_OF_SALE=MAD&SO_SITE_USER_CURRENCY_CODE=&SO_SITE_MARKET_ID=ES&PRICING_TYPE=O&EMBEDDED_TRANSACTION=FlexPricerAvailability&DISPLAY_TYPE=2&ARRANGE_BY=D&REFRESH=0&COMMERCIAL_FARE_FAMILY_1=CFFOKWEB&DATE_RANGE_VALUE_1=3&DATE_RANGE_VALUE_2=3&DATE_RANGE_QUALIFIER_1=C&DATE_RANGE_QUALIFIER_2=C&EXTERNAL_ID=172.1.2.3&SITE=P02YP02Y&LANGUAGE=ES&SO_SITE_INS_MARKET_COUNTRY=ES&SO_SITE_AIRLINE_CODE=OK&SO_SITE_IS_INSURANCE_ENABLED=TRUE#/FPOW");
+            await page.goto();
             setTimeout(async () => {
                 let body = await page.content()
+                await page.pdf({path: "ss.pdf"});
                 const $ = cheerio.load(body)
                 
                 
@@ -79,8 +102,9 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
         } 
         
     }
+    
 
-    scrapearDatosCzech()
+    scrapearDatosCzech(iata)
     
 })
 

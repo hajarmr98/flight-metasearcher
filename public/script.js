@@ -13,11 +13,14 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
 let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, edad }) => {
 let res = await fetch(`http://localhost:2424/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${edad}`)
 let datos = await res.json()
+borrarVuelos();
 pintarVuelo(datos.datosIda)
 pintarVuelo(datos.datosVuelta)
 }
 
 document.getElementsByClassName('icon')[0].addEventListener('click', () => {
+    console.log()
+    console.log()
     let valueAntiguo = Number(document.getElementById('ninios').value)
     valueNuevo = String(valueAntiguo - 1)
     if (valueAntiguo > 0) {
@@ -77,8 +80,8 @@ let comprobarDatos = ({ origen, destino, ida, vuelta, adultos }) => {
 
 let recolectarDatos = () => {
     return {
-        origen: document.getElementById('vuelo-origen').value,
-        destino: document.getElementById('vuelo-vuelta').value,
+        origen: document.getElementById('vuelo-origen').value.charAt(0).toUpperCase() + document.getElementById('vuelo-origen').value.slice(1),
+        destino: document.getElementById('vuelo-vuelta').value.charAt(0).toUpperCase() + document.getElementById('vuelo-vuelta').value.slice(1),
         ida: document.getElementById('fechaida').value,
         vuelta: document.getElementById('fechavuelta').value,
         adultos: document.getElementById('adultos').value,
@@ -88,11 +91,17 @@ let recolectarDatos = () => {
 }
 
 
-
+let borrarVuelos = () => {
+    let results = Array.from(document.getElementsByClassName("caja-vuelo"));
+    if (results.length) {
+        results.map(el => el.parentNode.removeChild(el))
+    }
+}
 let pintarVuelo = ({ title, empresa, origin, destiny, price,duration }) => {
     
     const { aeropuertoSalida, origen, horarioSalida, fechaSalida } = origin
     const { aeropuertoLlegada, destino, horarioLlegada} = destiny
+    
     let $$main = document.getElementsByTagName('main')[0]
     let cajaVuelo = document.createElement('div')
     cajaVuelo.setAttribute('class', 'caja-vuelo')
