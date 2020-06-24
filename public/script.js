@@ -14,9 +14,15 @@ let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, edad 
 let res = await fetch(`http://localhost:2424/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${edad}`)
 let datos = await res.json()
 borrarVuelos();
-pintarVuelo(datos.datosIda)
-pintarVuelo(datos.datosVuelta)
+if(datos.valid){
+    pintarVuelo(datos.datosIda)
+    pintarVuelo(datos.datosVuelta)
+}else {
+    alert('No existen vuelos de esas caracteristicas')
 }
+}
+
+
 
 document.getElementsByClassName('icon')[0].addEventListener('click', () => {
     console.log()
@@ -82,8 +88,8 @@ let recolectarDatos = () => {
     return {
         origen: document.getElementById('vuelo-origen').value.charAt(0).toUpperCase() + document.getElementById('vuelo-origen').value.slice(1),
         destino: document.getElementById('vuelo-vuelta').value.charAt(0).toUpperCase() + document.getElementById('vuelo-vuelta').value.slice(1),
-        ida: document.getElementById('fechaida').value,
-        vuelta: document.getElementById('fechavuelta').value,
+        ida: document.getElementById('fechaida').value.split('-').join(''),
+        vuelta: document.getElementById('fechavuelta').value.split('-').join(''),
         adultos: document.getElementById('adultos').value,
         ninios: document.getElementById('ninios').value,
         edad: document.getElementById('edadNinio').value
