@@ -89,7 +89,7 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
         try{
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
-            await page.goto("https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=CDG&triptype=r&origin=BCN&fromdate=2020-09-07&todate=2020-09-12&adults=1&childs=0&infants=0&lng=es-ES#/reservar-vuelos/select");
+            await page.goto("https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=CDG&triptype=r&origin=BCN&fromdate=2020-09-16&todate=2020-09-24&adults=1&childs=0&infants=0&lng=es-ES#/loading/reservar-vuelos");
             setTimeout(async() => {
                 let body = await page.content()
                 const $ = cheerio.load(body)
@@ -106,28 +106,29 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
                         destiny: {
                                 aeropuertoLlegada: $('#flightselection__outbound .m-ibe-flighttable__station').last().text(),
                                 destino: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1],
-                                horarioLlegada: $('#flightselection__outbound .a-headline.a-headline--h4.t-spacing--0').html()
+                                horarioLlegada: $('#flightselection__outbound .a-headline.a-headline--h4.t-spacing--0').text().substring(5,10)
                             },
                             price: $('.a-price.a-price--large').first().text(),
-                            duration: $('.m-ibe-flighttable__item').first().text().split('    ')[1]
+                            duration: $('.m-ibe-flighttable__item').first().text().split(' ')[1]
                         }
                         ret.datosVuelta = {
                                 title: 'Vuelo de Vuelta',
                                 empresa: 'Eurowings',
                                 origin: {
-                                        aeropuertoSalida: $('#flightselection__inbound .m-ibe-flighttable__station').text(),
+                                        aeropuertoSalida: $('#flightselection__inbound .m-ibe-flighttable__station').first().text(),
                                         origen: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1] ,
                                         horarioSalida: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight .a-headline.a-headline--h4.t-spacing--0').first().text(),
                                         fechaSalida: $('#flightselection__inbound .o-ibe-flightselection__navigation-action-date').text().substring(10, 19),
                         },
                         destiny: {
-                                aeropuertoLlegada: $('.m-ibe-flighttable__station').text(),
+                                aeropuertoLlegada: $('#flightselection__inbound .m-ibe-flighttable__station').last().text(),
                                 destino: $('.m-form-autocomplete__prefix').first().text(),
-                                horarioLlegada: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight.m-ibe-flighttable__flight--right .a-headline.a-headline--h4.t-spacing--0').text(),
+                                horarioLlegada: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight.m-ibe-flighttable__flight--right .a-headline.a-headline--h4.t-spacing--0').last().text(),
                          },
                          price: $('#flightselection__inbound .a-price.a-price--large').first().text(),
                          duration: $('#flightselection__inbound .m-ibe-flighttable__duration').first().text(),
-                    },
+                    }
+
                     console.log(ret)
                     // browser.close()
                 // res.send(JSON.stringify(ret))
