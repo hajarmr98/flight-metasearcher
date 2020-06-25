@@ -144,8 +144,11 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
         }catch(err){
             throw err
         } 
-        
     }
+
+
+
+    
 
 })
 
