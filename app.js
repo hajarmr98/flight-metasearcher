@@ -23,7 +23,7 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
         edad: req.params.edad
     }
     
-    let scrapearDatosCzech = async () => {
+   /* let scrapearDatosCzech = async () => {
         let ret = {
             datosIda: '',
             datosVuelta: ''
@@ -73,15 +73,76 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
                 }
                 browser.close()
                 res.send(JSON.stringify(ret))
-            },5000)
+            }, 5000)
         }catch(err){
             throw err
         } 
         
     }
+    scrapearDatosCzech()*/
 
-    scrapearDatosCzech()
+    let scrapearDatosEuroWings = async () => {
+        let ret = {
+            datosIda: '',
+            datosVuelta: ''
+        }
+        try{
+            const browser = await puppeteer.launch();
+            const page = await browser.newPage();
+            await page.goto("https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=CDG&triptype=r&origin=BCN&fromdate=2020-09-07&todate=2020-09-12&adults=1&childs=0&infants=0&lng=es-ES#/reservar-vuelos/select");
+            setTimeout(async() => {
+                let body = await page.content()
+                const $ = cheerio.load(body)
     
+                   ret.datosIda = {
+                        title: 'Vuelo de ida',
+                        empresa: 'Eurowings',
+                        origin: {
+                            aeropuertoSalida: $('#flightselection__outbound .m-ibe-flighttable__station').first().text(), 
+                            origen: $('.m-form-autocomplete__prefix').first().text(),
+                            horarioSalida: $('.a-headline.a-headline--h4.t-spacing--0').html(),
+                           fechaSalida: $('.o-ibe-flightselection__navigation-action-date').text().substring(10, 20)
+                        },
+                        destiny: {
+                                aeropuertoLlegada: $('#flightselection__outbound .m-ibe-flighttable__station').last().text(),
+                                destino: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1],
+                                horarioLlegada: $('#flightselection__outbound .a-headline.a-headline--h4.t-spacing--0').html()
+                            },
+                            price: $('.a-price.a-price--large').first().text(),
+                            duration: $('.m-ibe-flighttable__item').first().text().split('    ')[1]
+                        }
+                        ret.datosVuelta = {
+                                title: 'Vuelo de Vuelta',
+                                empresa: 'Eurowings',
+                                origin: {
+                                        aeropuertoSalida: $('#flightselection__inbound .m-ibe-flighttable__station').text(),
+                                        origen: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1] ,
+                                        horarioSalida: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight .a-headline.a-headline--h4.t-spacing--0').first().text(),
+                                        fechaSalida: $('#flightselection__inbound .o-ibe-flightselection__navigation-action-date').text().substring(10, 19),
+                        },
+                        destiny: {
+                                aeropuertoLlegada: $('.m-ibe-flighttable__station').text(),
+                                destino: $('.m-form-autocomplete__prefix').first().text(),
+                                horarioLlegada: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight.m-ibe-flighttable__flight--right .a-headline.a-headline--h4.t-spacing--0').text(),
+                         },
+                         price: $('#flightselection__inbound .a-price.a-price--large').first().text(),
+                         duration: $('#flightselection__inbound .m-ibe-flighttable__duration').first().text(),
+                    },
+                    console.log(ret)
+                    // browser.close()
+                // res.send(JSON.stringify(ret))
+            }, 6000)
+        }catch(err){
+            throw err
+        } 
+        
+    }
+    
+    scrapearDatosEuroWings()
 })
 
 server.listen(port,() => console.log('Running in port: ' + port))
+
+
+
+
