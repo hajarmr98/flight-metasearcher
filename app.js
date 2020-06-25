@@ -25,6 +25,23 @@ let buscarIata = async (origen,destino) => {
     return response
 }
 
+let buscarIataAirport = async (origen,destino) => {
+    let response = {
+        ida:'',
+        vuelta:''
+    }
+    await axios.get(`http://api.aviationstack.com/v1/airports?access_key=17257fb3bb99b705fbba913e8d3cfcb8&city_iata_code=${origen}`)
+    .then(res => {
+        response.ida = res.data.data[0].iata_code
+    })
+    await axios.get(`http://api.aviationstack.com/v1/airports?access_key=17257fb3bb99b705fbba913e8d3cfcb8&city_iata_code=${destino}`)
+    .then(res => {
+        response.vuelta = res.data.data[0].iata_code
+    })
+
+    return response
+}
+
 let urlAdultosCzech = (num) => {
     let str1 = 'TRAVELLER_TYPE_';
     let res = '';
@@ -151,56 +168,65 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
 
     let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fechaVuelta,ninios,bebes}) => {
         let ret = {
+            valid: '',
             datosIda: '',
             datosVuelta: ''
         }
+        buscarIataAirport(ida,vuelta)
+        .then(res => {
+            ida = res.ida
+            vuelta = res.vuelta
+        } )
         let url = `https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=${vuelta}&triptype=r&origin=${ida}&fromdate=${fechaIda}&todate=${fechaVuelta}&adults=${adultos}&childs=${ninios}&infants=${bebes}&lng=es-ES#/reservar-vuelos/select`
         try{
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
             await page.goto(url);
-            console.log(url)
             setTimeout(async() => {
                 let body = await page.content()
                 const $ = cheerio.load(body)
-    
-                   ret.datosIda = {
-                        title: 'Vuelo de ida',
-                        empresa: 'Eurowings',
-                        origin: {
-                            aeropuertoSalida: $('#flightselection__outbound .m-ibe-flighttable__station').first().text(), 
-                            origen: $('.m-form-autocomplete__prefix').first().text(),
-                            horarioSalida: $('.a-headline.a-headline--h4.t-spacing--0').html(),
-                           fechaSalida: $('.o-ibe-flightselection__navigation-action-date').text().substring(10, 20)
-                        },
-                        destiny: {
-                                aeropuertoLlegada: $('#flightselection__outbound .m-ibe-flighttable__station').last().text(),
-                                destino: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1],
-                                horarioLlegada: $('#flightselection__outbound .a-headline.a-headline--h4.t-spacing--0').text().substring(5,10)
-                            },
-                            price: $('.a-price.a-price--large').first().text(),
-                            duration: $('.m-ibe-flighttable__item').first().text().split(' ')[1]
-                        }
-                        ret.datosVuelta = {
-                                title: 'Vuelo de Vuelta',
-                                empresa: 'Eurowings',
-                                origin: {
-                                        aeropuertoSalida: $('#flightselection__inbound .m-ibe-flighttable__station').first().text(),
-                                        origen: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1] ,
-                                        horarioSalida: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight .a-headline.a-headline--h4.t-spacing--0').first().text(),
-                                        fechaSalida: $('#flightselection__inbound .o-ibe-flightselection__navigation-action-date').text().substring(10, 19),
-                        },
-                        destiny: {
-                                aeropuertoLlegada: $('#flightselection__inbound .m-ibe-flighttable__station').last().text(),
-                                destino: $('.m-form-autocomplete__prefix').first().text(),
-                                horarioLlegada: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight.m-ibe-flighttable__flight--right .a-headline.a-headline--h4.t-spacing--0').last().text(),
-                         },
-                         price: $('#flightselection__inbound .a-price.a-price--large').first().text(),
-                         duration: $('#flightselection__inbound .m-ibe-flighttable__duration').first().text(),
-                    }
 
+                if($('.a-message.a-message--invalid').length > 0){
+                    ret.valid = false
+                }else{
+                    ret.datosIda = {
+                         title: 'Vuelo de ida',
+                         empresa: 'Eurowings',
+                         origin: {
+                             aeropuertoSalida: $('#flightselection__outbound .m-ibe-flighttable__station').first().text(), 
+                             origen: $('.m-form-autocomplete__prefix').first().text(),
+                             horarioSalida: $('.a-headline.a-headline--h4.t-spacing--0').html(),
+                            fechaSalida: $('.o-ibe-flightselection__navigation-action-date').text().substring(10, 20)
+                         },
+                         destiny: {
+                                 aeropuertoLlegada: $('#flightselection__outbound .m-ibe-flighttable__station').last().text(),
+                                 destino: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1],
+                                 horarioLlegada: $('#flightselection__outbound .a-headline.a-headline--h4.t-spacing--0').text().substring(5,10)
+                             },
+                             price: $('.a-price.a-price--large').first().text(),
+                             duration: $('.m-ibe-flighttable__item').first().text().split(' ')[1]
+                         }
+                         ret.datosVuelta = {
+                                 title: 'Vuelo de Vuelta',
+                                 empresa: 'Eurowings',
+                                 origin: {
+                                         aeropuertoSalida: $('#flightselection__inbound .m-ibe-flighttable__station').first().text(),
+                                         origen: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1] ,
+                                         horarioSalida: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight .a-headline.a-headline--h4.t-spacing--0').first().text(),
+                                         fechaSalida: $('#flightselection__inbound .o-ibe-flightselection__navigation-action-date').text().substring(10, 19),
+                         },
+                         destiny: {
+                                 aeropuertoLlegada: $('#flightselection__inbound .m-ibe-flighttable__station').last().text(),
+                                 destino: $('.m-form-autocomplete__prefix').first().text(),
+                                 horarioLlegada: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight.m-ibe-flighttable__flight--right .a-headline.a-headline--h4.t-spacing--0').last().text(),
+                          },
+                          price: $('#flightselection__inbound .a-price.a-price--large').first().text(),
+                          duration: $('#flightselection__inbound .m-ibe-flighttable__duration').first().text(),
+                     }
+                     ret.valid = true
+                }
                     console.log(ret)
-                    // browser.close()
+                    browser.close()
                 // res.send(JSON.stringify(ret))
             }, 6000)
         }catch(err){
