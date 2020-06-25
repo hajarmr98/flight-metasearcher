@@ -11,8 +11,8 @@ let recolectarDatos = () => {
     return {
         origen: document.getElementById('vuelo-origen').value.charAt(0).toUpperCase() + document.getElementById('vuelo-origen').value.slice(1),
         destino: document.getElementById('vuelo-vuelta').value.charAt(0).toUpperCase() + document.getElementById('vuelo-vuelta').value.slice(1),
-        ida: document.getElementById('fechaida').value.split('-').join(''),
-        vuelta: document.getElementById('fechavuelta').value.split('-').join(''),
+        ida: document.getElementById('fechaida').value,
+        vuelta: document.getElementById('fechavuelta').value,
         adultos: document.getElementById('adultos').value,
         ninios: document.getElementById('ninios').value,
         bebes: document.getElementById('bebes').value

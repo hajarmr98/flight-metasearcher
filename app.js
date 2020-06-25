@@ -71,6 +71,9 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
 
     buscarIata(collectData.origen,collectData.destino)
     .then(res => {
+        scrapearDatosEuroWings(res,collectData)
+        collectData.ida = collectData.ida.split('-').join('')
+        collectData.vuelta = collectData.vuelta.split('-').join('')
         scrapearDatosCzech(res,collectData)
     })
     
@@ -97,7 +100,6 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
             setTimeout(async () => {
                 let body = await page.content()
                 const $ = cheerio.load(body)
-                console.log(url)
                 if($('#global-error-message').html() === null){
                     ret.datosIda = {
                         title: 'Vuelo de ida',
@@ -133,6 +135,7 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
                         price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('.price').last().text(),
                         duration: $('.duration').children().last().text().split(',')[0]
                     }
+                    console.log(ret)
                     ret.valid = true
                     res.send(JSON.stringify(ret))
                 } else {
@@ -146,10 +149,70 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
         } 
     }
 
-
-
+    let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fechaVuelta,ninios,bebes}) => {
+        let ret = {
+            datosIda: '',
+            datosVuelta: ''
+        }
+        let url = `https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=${vuelta}&triptype=r&origin=${ida}&fromdate=${fechaIda}&todate=${fechaVuelta}&adults=${adultos}&childs=${ninios}&infants=${bebes}&lng=es-ES#/reservar-vuelos/select`
+        try{
+            const browser = await puppeteer.launch();
+            const page = await browser.newPage();
+            await page.goto(url);
+            console.log(url)
+            setTimeout(async() => {
+                let body = await page.content()
+                const $ = cheerio.load(body)
     
+                   ret.datosIda = {
+                        title: 'Vuelo de ida',
+                        empresa: 'Eurowings',
+                        origin: {
+                            aeropuertoSalida: $('#flightselection__outbound .m-ibe-flighttable__station').first().text(), 
+                            origen: $('.m-form-autocomplete__prefix').first().text(),
+                            horarioSalida: $('.a-headline.a-headline--h4.t-spacing--0').html(),
+                           fechaSalida: $('.o-ibe-flightselection__navigation-action-date').text().substring(10, 20)
+                        },
+                        destiny: {
+                                aeropuertoLlegada: $('#flightselection__outbound .m-ibe-flighttable__station').last().text(),
+                                destino: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1],
+                                horarioLlegada: $('#flightselection__outbound .a-headline.a-headline--h4.t-spacing--0').text().substring(5,10)
+                            },
+                            price: $('.a-price.a-price--large').first().text(),
+                            duration: $('.m-ibe-flighttable__item').first().text().split(' ')[1]
+                        }
+                        ret.datosVuelta = {
+                                title: 'Vuelo de Vuelta',
+                                empresa: 'Eurowings',
+                                origin: {
+                                        aeropuertoSalida: $('#flightselection__inbound .m-ibe-flighttable__station').first().text(),
+                                        origen: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1] ,
+                                        horarioSalida: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight .a-headline.a-headline--h4.t-spacing--0').first().text(),
+                                        fechaSalida: $('#flightselection__inbound .o-ibe-flightselection__navigation-action-date').text().substring(10, 19),
+                        },
+                        destiny: {
+                                aeropuertoLlegada: $('#flightselection__inbound .m-ibe-flighttable__station').last().text(),
+                                destino: $('.m-form-autocomplete__prefix').first().text(),
+                                horarioLlegada: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight.m-ibe-flighttable__flight--right .a-headline.a-headline--h4.t-spacing--0').last().text(),
+                         },
+                         price: $('#flightselection__inbound .a-price.a-price--large').first().text(),
+                         duration: $('#flightselection__inbound .m-ibe-flighttable__duration').first().text(),
+                    }
 
+                    console.log(ret)
+                    // browser.close()
+                // res.send(JSON.stringify(ret))
+            }, 6000)
+        }catch(err){
+            throw err
+        } 
+        
+    }
+    
 })
 
 server.listen(port,() => console.log('Running in port: ' + port))
+
+
+
+
