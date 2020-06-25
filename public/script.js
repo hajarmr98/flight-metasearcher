@@ -1,28 +1,3 @@
-document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
-    e.preventDefault();
-    let vuelo = recolectarDatos()
-
-    if (!comprobarDatos(vuelo)) {
-        alert('Rellena los datos')
-    } else {
-        // new FormData(document.getElementsByTagName('form')[0])
-        buscadorAvion(vuelo)
-    }
-})
-
-let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
-let res = await fetch(`http://localhost:2424/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${bebes}`)
-let datos = await res.json()
-borrarVuelos();
-if(datos.valid){
-    pintarVuelo(datos.datosIda)
-    pintarVuelo(datos.datosVuelta)
-}else {
-    alert('No existen vuelos de esas caracteristicas')
-}
-}
-
-
 
 let comprobarDatos = ({ origen, destino, ida, vuelta, adultos }) => {
     if (origen === '' || destino === '' || ida === '' || vuelta === '' || adultos === '') {
@@ -134,6 +109,29 @@ let pintarVuelo = ({ title, empresa, origin, destiny, price,duration }) => {
     $$main.appendChild(cajaVuelo)
 }
 
+let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
+    let res = await fetch(`http://localhost:2424/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${bebes}`)
+    let datos = await res.json()
+    borrarVuelos();
+    if(datos.valid){
+        pintarVuelo(datos.datosIda)
+        pintarVuelo(datos.datosVuelta)
+    }else {
+        alert('No existen vuelos de esas caracteristicas')
+    }
+}
+
+document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
+    e.preventDefault();
+    let vuelo = recolectarDatos()
+
+    if (!comprobarDatos(vuelo)) {
+        alert('Rellena los datos')
+    } else {
+        // new FormData(document.getElementsByTagName('form')[0])
+        buscadorAvion(vuelo)
+    }
+})
 
 // document.getElementsByClassName('icon')[0].addEventListener('click', () => {
 //     console.log()
