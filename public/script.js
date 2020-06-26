@@ -19,7 +19,30 @@ let recolectarDatos = () => {
     }
 }
 
-
+let pintarLoader = () => {
+    let caja = document.createElement('div')
+    let caja1 = document.createElement('div')
+    let $p = document.createElement('p')
+    $p.innerText = 'Cargando Vuelos'
+    $p.style.position = 'relative'
+    $p.style.top = '50%'
+    $p.style.left = '45%'
+    caja1.style.width = '100vw'
+    caja1.style.height = '500px'
+    caja1.style.backgroundColor = 'black'
+    caja.className = 'loader'
+    caja1.className = 'cargaI'
+    caja.animate([
+        { transform: 'rotate(0deg)' },
+        { transform: 'rotate(360deg)' }
+    ],{
+        duration: 2000,
+        iterations: Infinity
+    })
+    caja1.appendChild(caja)
+    caja1.appendChild($p)
+    document.getElementsByTagName('main')[0].appendChild(caja1)
+}
 let borrarVuelos = () => {
     let results = Array.from(document.getElementsByClassName("caja-vuelo"));
     if (results.length) {
@@ -28,7 +51,7 @@ let borrarVuelos = () => {
 }
 
 let pintarVuelo = ({ title, empresa, origin, destiny, price,duration }) => {
-    
+    document.getElementsByClassName('cargaI')[0].remove()
     const { aeropuertoSalida, origen, horarioSalida, fechaSalida } = origin
     const { aeropuertoLlegada, destino, horarioLlegada} = destiny
     
@@ -129,6 +152,7 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
         alert('Rellena los datos')
     } else {
         // new FormData(document.getElementsByTagName('form')[0])
+        pintarLoader()
         buscadorAvion(vuelo)
     }
 })
