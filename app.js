@@ -12,11 +12,11 @@ let buscarIata = async (origen,destino) => {
         ida:'',
         vuelta:''
     }
-    await axios.get(`http://api.aviationstack.com/v1/cities?access_key=17257fb3bb99b705fbba913e8d3cfcb8&city_name=${origen}`)
+    await axios.get(`http://api.aviationstack.com/v1/cities?access_key=4d2377c1cc06e752abf6cea753282908&city_name=${origen}`)
     .then(res => {
         response.ida = res.data.data[0].iata_code
     })
-    await axios.get(`http://api.aviationstack.com/v1/cities?access_key=17257fb3bb99b705fbba913e8d3cfcb8&city_name=${destino}`)
+    await axios.get(`http://api.aviationstack.com/v1/cities?access_key=4d2377c1cc06e752abf6cea753282908&city_name=${destino}`)
     .then(res => {
         response.vuelta = res.data.data[0].iata_code
     })
@@ -29,11 +29,11 @@ let buscarIataAirport = async (origen,destino) => {
         ida:'',
         vuelta:''
     }
-    await axios.get(`http://api.aviationstack.com/v1/airports?access_key=17257fb3bb99b705fbba913e8d3cfcb8&city_iata_code=${origen}`)
+    await axios.get(`http://api.aviationstack.com/v1/airports?access_key=4d2377c1cc06e752abf6cea753282908&city_iata_code=${origen}`)
     .then(res => {
         response.ida = res.data.data[0].iata_code
     })
-    await axios.get(`http://api.aviationstack.com/v1/airports?access_key=17257fb3bb99b705fbba913e8d3cfcb8&city_iata_code=${destino}`)
+    await axios.get(`http://api.aviationstack.com/v1/airports?access_key=4d2377c1cc06e752abf6cea753282908&city_iata_code=${destino}`)
     .then(res => {
         response.vuelta = res.data.data[0].iata_code
     })
@@ -90,8 +90,8 @@ let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: 
                 setTimeout(async() => {
                     let body = await page.content()
                     const $ = cheerio.load(body)
-
-                    if($('.a-message.a-message--invalid').length > 2){
+                    console.log($('.a-price.a-price--large').first().text())
+                    if($('.a-message.a-message--invalid').length > 2 || $('.a-price.a-price--large').first().text() === ''){
                         ret.valid = false
                     }else{
                         ret.datosIda = {
@@ -164,7 +164,7 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
             setTimeout(async () => {
                     let body = await page.content()
                     const $ = cheerio.load(body)
-                    if($('#global-error-message').html() === null){
+                    if($('#global-error-message').html() === null && $('#alert-title-global-warning-message').html() === null){
                         ret.datosIda = {
                             title: 'Vuelo de ida',
                             empresa: $('.airline-name').first().text(),
@@ -198,6 +198,7 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
                             },
                             price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('.price').last().text(),
                             duration: $('.duration').children().last().text().split(',')[0]
+                    
                         }
                         ret.valid = true
                     } else {
@@ -213,6 +214,45 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
     } 
 }
 
+let compararPreciosIda = (aerolineas) => {
+    let czech = aerolineas[1].datosIda
+    console.log(czech)
+    let czechPrice = czech.price.split(' ')[1].replace(',','.')
+    console.log(czechPrice)
+    let czechIntegerIda = parseFloat(czechPrice)   
+    
+    let euro = aerolineas[0]
+    let euroPrice = euro.price.split(' ')[0].replace(',','.')
+    let euroIntegerIda = parseFloat(euroPrice)
+    
+    if (czechIntegerIda > euroIntegerIda) {
+    return aerolineas[0]
+    } else if (euroIntegerIda > czechIntegerIda) {
+     return aerolineas[1]
+    } else {
+      return aerolineas[Math.floor(Math.random() * 2)]
+    }
+}
+
+let compararPreciosVuelta = (aerolineas) => {
+    let czechVuelta = aerolineas[1].datosVuelta
+    let czechPriceVuelta = czechVuelta.price.split(' ')[1].replace(',','.')
+    let czechIntegerVuelta = parseFloat(czechPriceVuelta)
+
+    let euroVuelta = aerolineas[0]
+    let euroPriceVuelta = euroVuelta.price.split(' ')[0].replace(',','.')
+    let euroIntegerVuelta = parseFloat(euroPriceVuelta)
+
+    if (czechIntegerVuelta > euroIntegerIda) {
+        scrapearDatosCzech()
+        } else if (euroIntegerVuelta > czechIntegerVuelta) {
+            scrapearDatosEuroWings()
+        } else {
+            scrapearDatosCzech()
+            scrapearDatosEuroWings()
+        }
+}
+
 
 let buscarVuelos = async (res,datos) => {
     let aerolineas = [];
@@ -223,11 +263,18 @@ let buscarVuelos = async (res,datos) => {
         let czechA = await scrapearDatosCzech(res,datos)
         aerolineas.push(euroW)
         aerolineas.push(czechA)
-        compararPrecios(aerolineas)
+        console.log(aerolineas)
+        let final = {
+            objetoIda : compararPreciosIda(aerolineas),
+            objetoVuelta : compararPreciosVuelta(aerolineas)
+        }
+        return final
+
     } catch(err){
         console.log(err)
-    }
+    } 
 }
+
 
 server.get('/', (req, res) => res.sendfile(__dirname + '/index.html'))
 
@@ -246,6 +293,7 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
     .then(async resp => {
         try{
            let vueloMasBarat = await buscarVuelos(resp,collectData)
+           res.send(vueloMasBarat)
         } catch(err) {
             console.log(err)
         }
