@@ -43,6 +43,7 @@ let pintarLoader = () => {
     caja1.appendChild($p)
     document.getElementsByTagName('main')[0].appendChild(caja1)
 }
+
 let borrarVuelos = () => {
     let results = Array.from(document.getElementsByClassName("caja-vuelo"));
     if (results.length) {
