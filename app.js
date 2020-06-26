@@ -215,42 +215,64 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
 }
 
 let compararPreciosIda = (aerolineas) => {
-    let czech = aerolineas[1].datosIda
-    console.log(czech)
-    let czechPrice = czech.price.split(' ')[1].replace(',','.')
-    console.log(czechPrice)
-    let czechIntegerIda = parseFloat(czechPrice)   
-    
-    let euro = aerolineas[0]
-    let euroPrice = euro.price.split(' ')[0].replace(',','.')
-    let euroIntegerIda = parseFloat(euroPrice)
-    
-    if (czechIntegerIda > euroIntegerIda) {
-    return aerolineas[0]
-    } else if (euroIntegerIda > czechIntegerIda) {
-     return aerolineas[1]
+
+    let validCzech = aerolineas[1].valid
+    let validEuro = aerolineas[0].valid
+
+    if(validCzech && validEuro){
+        let czech = aerolineas[1].datosIda
+        console.log(czech)
+        let czechPrice = czech.price.split(' ')[1].replace(',','.')
+        console.log(czechPrice)
+        let czechIntegerIda = parseFloat(czechPrice)   
+        
+        let euro = aerolineas[0].datosIda
+        let euroPrice = euro.price.split(' ')[0].replace(',','.')
+        let euroIntegerIda = parseFloat(euroPrice)
+        
+        if (czechIntegerIda > euroIntegerIda) {
+        return aerolineas[0].datosIda
+        } else if (euroIntegerIda > czechIntegerIda) {
+         return aerolineas[1].datosIda
+        } else {
+          return aerolineas[Math.floor(Math.random() * 2)].datosIda
+        }
+
+    }else if(validCzech && !validEuro) {
+        return aerolineas[1].datosIda
     } else {
-      return aerolineas[Math.floor(Math.random() * 2)]
+        return aerolineas[0].datosIda
     }
 }
 
 let compararPreciosVuelta = (aerolineas) => {
-    let czechVuelta = aerolineas[1].datosVuelta
-    let czechPriceVuelta = czechVuelta.price.split(' ')[1].replace(',','.')
-    let czechIntegerVuelta = parseFloat(czechPriceVuelta)
+    let validCzech = aerolineas[1].valid
+    let validEuro = aerolineas[0].valid
 
-    let euroVuelta = aerolineas[0]
-    let euroPriceVuelta = euroVuelta.price.split(' ')[0].replace(',','.')
-    let euroIntegerVuelta = parseFloat(euroPriceVuelta)
-
-    if (czechIntegerVuelta > euroIntegerIda) {
-        scrapearDatosCzech()
-        } else if (euroIntegerVuelta > czechIntegerVuelta) {
-            scrapearDatosEuroWings()
+    if(validCzech && validEuro){
+        let czech = aerolineas[1].datosVuelta
+        console.log(czech)
+        let czechPrice = czech.price.split(' ')[1].replace(',','.')
+        console.log(czechPrice)
+        let czechIntegerIda = parseFloat(czechPrice)   
+        
+        let euro = aerolineas[0].datosVuelta
+        let euroPrice = euro.price.split(' ')[0].replace(',','.')
+        let euroIntegerIda = parseFloat(euroPrice)
+        
+        if (czechIntegerIda > euroIntegerIda) {
+        return aerolineas[0].datosVuelta
+        } else if (euroIntegerIda > czechIntegerIda) {
+         return aerolineas[1].datosVuelta
         } else {
-            scrapearDatosCzech()
-            scrapearDatosEuroWings()
+          return aerolineas[Math.floor(Math.random() * 2)]
         }
+
+    }else if(validCzech && !validEuro) {
+        return aerolineas[1].datosVuelta
+    } else {
+        return aerolineas[0].datosVuelta
+    }
 }
 
 
