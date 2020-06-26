@@ -81,16 +81,14 @@ let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: 
         vuelta = res.vuelta
     } )
     let url = `https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=${vuelta}&triptype=r&origin=${ida}&fromdate=${fechaIda}&todate=${fechaVuelta}&adults=${adultos}&childs=${ninios}&infants=${bebes}&lng=es-ES#/reservar-vuelos/select`
-    console.log(url)
     try{
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.goto(url);
-            const setWings = new Promise((resolve,rej) => {
+        const setWings = new Promise((resolve,rej) => {
                 setTimeout(async() => {
                     let body = await page.content()
                     const $ = cheerio.load(body)
-                    console.log($('.a-price.a-price--large').first().text())
                     if($('.a-message.a-message--invalid').length > 2 || $('.a-price.a-price--large').first().text() === ''){
                         ret.valid = false
                     }else{
@@ -156,6 +154,7 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
         bebis = urlBebesCzech(bebes)
     }
     let url = `https://book.csa.cz/plnext/czech_DX/Override.action?${adults}${nini}${bebis}TRIP_FLOW=YES&BOOKING_FLOW=REVENUE&B_LOCATION_1=${ida}&E_LOCATION_1=${vuelta}&B_DATE_1=${fechaIda}0000&B_ANY_TIME_1=TRUE&B_DATE_2=${fechaVuelta}0000&B_ANY_TIME_2=TRUE&TRIP_TYPE=R&B_LOCATION_2=MAD&E_LOCATION_2=BCN&SO_SITE_POINT_OF_SALE=MAD&SO_SITE_USER_CURRENCY_CODE=&SO_SITE_MARKET_ID=ES&PRICING_TYPE=O&EMBEDDED_TRANSACTION=FlexPricerAvailability&DISPLAY_TYPE=2&ARRANGE_BY=D&REFRESH=0&COMMERCIAL_FARE_FAMILY_1=CFFOKWEB&DATE_RANGE_VALUE_1=3&DATE_RANGE_VALUE_2=3&DATE_RANGE_QUALIFIER_1=C&DATE_RANGE_QUALIFIER_2=C&EXTERNAL_ID=172.1.2.3&SITE=P02YP02Y&LANGUAGE=ES&SO_SITE_INS_MARKET_COUNTRY=ES&SO_SITE_AIRLINE_CODE=OK&SO_SITE_IS_INSURANCE_ENABLED=TRUE#/FPOW`
+    console.log(url)
     try{
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
@@ -221,9 +220,7 @@ let compararPreciosIda = (aerolineas) => {
 
     if(validCzech && validEuro){
         let czech = aerolineas[1].datosIda
-        console.log(czech)
         let czechPrice = czech.price.split(' ')[1].replace(',','.')
-        console.log(czechPrice)
         let czechIntegerIda = parseFloat(czechPrice)   
         
         let euro = aerolineas[0].datosIda
@@ -240,8 +237,10 @@ let compararPreciosIda = (aerolineas) => {
 
     }else if(validCzech && !validEuro) {
         return aerolineas[1].datosIda
-    } else {
+    } else if(!validCzech && validEuro){
         return aerolineas[0].datosIda
+    } else {
+        return false
     }
 }
 
@@ -251,9 +250,7 @@ let compararPreciosVuelta = (aerolineas) => {
 
     if(validCzech && validEuro){
         let czech = aerolineas[1].datosVuelta
-        console.log(czech)
         let czechPrice = czech.price.split(' ')[1].replace(',','.')
-        console.log(czechPrice)
         let czechIntegerIda = parseFloat(czechPrice)   
         
         let euro = aerolineas[0].datosVuelta
@@ -270,14 +267,21 @@ let compararPreciosVuelta = (aerolineas) => {
 
     }else if(validCzech && !validEuro) {
         return aerolineas[1].datosVuelta
-    } else {
+    } else if(!validCzech && validEuro){
         return aerolineas[0].datosVuelta
+    } else {
+        return false
     }
 }
 
 
 let buscarVuelos = async (res,datos) => {
     let aerolineas = [];
+    let final = {
+        val: '',
+        objetoIda : '',
+        objetoVuelta : ''
+    }
     try{
         let euroW = await scrapearDatosEuroWings(res,datos)
         datos.ida = datos.ida.split('-').join('')
@@ -285,10 +289,21 @@ let buscarVuelos = async (res,datos) => {
         let czechA = await scrapearDatosCzech(res,datos)
         aerolineas.push(euroW)
         aerolineas.push(czechA)
-        console.log(aerolineas)
-        let final = {
-            objetoIda : compararPreciosIda(aerolineas),
-            objetoVuelta : compararPreciosVuelta(aerolineas)
+        let idaVal = compararPreciosIda(aerolineas)
+        let vueltaVal = compararPreciosVuelta(aerolineas)
+        if(!idaVal && !vueltaVal){
+            final.val = false
+            return final
+        } else if(!idaVal){
+            final.val = true
+            final.objetoVuelta = vueltaVal
+        } else if(!vueltaVal){
+            final.val = true
+            final.objetoIda = idaVal
+        } else {
+            final.val = true
+            final.objetoIda = idaVal
+            final.objetoVuelta = vueltaVal
         }
         return final
 

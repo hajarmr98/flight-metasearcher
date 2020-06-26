@@ -52,7 +52,7 @@ let borrarVuelos = () => {
 }
 
 let pintarVuelo = ({ title, empresa, origin, destiny, price,duration }) => {
-    document.getElementsByClassName('cargaI')[0].remove()
+     
     const { aeropuertoSalida, origen, horarioSalida, fechaSalida } = origin
     const { aeropuertoLlegada, destino, horarioLlegada} = destiny
     
@@ -137,10 +137,12 @@ let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes
     let res = await fetch(`http://localhost:2424/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${bebes}`)
     let datos = await res.json()
     borrarVuelos();
-    if(datos.valid){
-        pintarVuelo(datos.datosIda)
-        pintarVuelo(datos.datosVuelta)
+    if(datos.val){
+        document.getElementsByClassName('cargaI')[0].remove()
+        pintarVuelo(datos.objetoIda)
+        pintarVuelo(datos.objetoVuelta)
     }else {
+        document.getElementsByClassName('cargaI')[0].remove()
         alert('No existen vuelos de esas caracteristicas')
     }
 }
