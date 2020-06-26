@@ -1,6 +1,5 @@
 const express = require('express')
 const server = express()
-const request = require('request')
 const puppeteer = require('puppeteer')
 const cheerio = require('cheerio')
 const axios = require('axios')
