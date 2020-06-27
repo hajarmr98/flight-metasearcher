@@ -81,6 +81,7 @@ let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: 
         vuelta = res.vuelta
     } )
     let url = `https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=${vuelta}&triptype=r&origin=${ida}&fromdate=${fechaIda}&todate=${fechaVuelta}&adults=${adultos}&childs=${ninios}&infants=${bebes}&lng=es-ES#/reservar-vuelos/select`
+    console.log(url)
     try{
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
@@ -178,7 +179,7 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
                                 destino: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[1],
                                 horarioLlegada: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[0]
                             },
-                            price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('.price').first().text(),
+                            price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('#tpl4_upsell-calendar-bound0_cell-price-selected-bound-0 .price').first().text(),
                             duration: $('.duration').children().text().split(',')[0]
                         }
                         ret.datosVuelta = {
@@ -186,7 +187,7 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
                             empresa: $('.airline-name').first().text(),
                             origin: {
                                 aeropuertoSalida: $('.flight-details-departure .flight-details-airport').last().text(),
-                                origen: $('.flight-details-departure .flight-details-city').last().html().split('</span> ')[1].split('\n')[0],
+                                origen: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[1],
                                 horarioSalida: $('.flight-details-departure .flight-details-city').last().html().split('</span> ')[0].split('\n')[2],
                                 fechaSalida: $('.tripsummary-title.tripsummary-date.tripsummary-details').last().children().last().text()
                             },
@@ -195,7 +196,7 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
                                 destino: $('.flight-details-arrival > .flight-details-city').last().text().split(' ')[1],
                                 horarioLlegada: $('.flight-details-arrival > .flight-details-city').last().text().split(' ')[0]
                             },
-                            price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('.price').last().text(),
+                            price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('#tpl4_upsell-calendar-bound1_cell-price-selected-bound-1 .price').last().text(),
                             duration: $('.duration').children().last().text().split(',')[0]
                     
                         }
