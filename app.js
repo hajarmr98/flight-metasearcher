@@ -12,11 +12,11 @@ let buscarIata = async (origen,destino) => {
         ida:'',
         vuelta:''
     }
-    await axios.get(`http://api.aviationstack.com/v1/cities?access_key=4d2377c1cc06e752abf6cea753282908&city_name=${origen}`)
+    await axios.get(`http://api.aviationstack.com/v1/cities?access_key=0a652144617594796a7e6bc4758b9e35&city_name=${origen}`)
     .then(res => {
         response.ida = res.data.data[0].iata_code
     })
-    await axios.get(`http://api.aviationstack.com/v1/cities?access_key=4d2377c1cc06e752abf6cea753282908&city_name=${destino}`)
+    await axios.get(`http://api.aviationstack.com/v1/cities?access_key=0a652144617594796a7e6bc4758b9e35&city_name=${destino}`)
     .then(res => {
         response.vuelta = res.data.data[0].iata_code
     })
@@ -29,14 +29,14 @@ let buscarIataAirport = async (origen,destino) => {
         ida:'',
         vuelta:''
     }
-    await axios.get(`http://api.aviationstack.com/v1/airports?access_key=4d2377c1cc06e752abf6cea753282908&city_iata_code=${origen}`)
+    await axios.get(`http://api.aviationstack.com/v1/airports?access_key=0a652144617594796a7e6bc4758b9e35&city_iata_code=${origen}`)
     .then(res => {
         response.ida = []
         for(let x = 0; x < res.data.data.length; x++){
             response.ida.push(res.data.data[x].iata_code)
         }
     })
-    await axios.get(`http://api.aviationstack.com/v1/airports?access_key=4d2377c1cc06e752abf6cea753282908&city_iata_code=${destino}`)
+    await axios.get(`http://api.aviationstack.com/v1/airports?access_key=0a652144617594796a7e6bc4758b9e35&city_iata_code=${destino}`)
     .then(res => {
         response.vuelta = []
         for(let x = 0; x < res.data.data.length; x++){
@@ -78,7 +78,8 @@ let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: 
     let ret = {
         valid: '',
         datosIda: '',
-        datosVuelta: ''
+        datosVuelta: '',
+        url: ''
     }
     let aeropuertos = await buscarIataAirport(ida,vuelta)
     ida = aeropuertos.ida
@@ -113,9 +114,10 @@ let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: 
                                             horarioLlegada: $('#flightselection__outbound .a-headline.a-headline--h4.t-spacing--0').text().substring(5,10)
                                         },
                                         price: $('.a-price.a-price--large').first().text(),
-                                        duration: $('.m-ibe-flighttable__item').first().text().split(' ')[1]
+                                        duration: $('.m-ibe-flighttable__item').first().text().split(' ')[1],
+                                        url: `https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=${vuelta[y]}&origin=${ida[x]}&fromdate=${fechaIda}&triptype=oneway&adults=${adultos}&childs=${ninios}&infants=${bebes}&lng=es-ES#/reservar-vuelos/select`
                                     }
-                                    ret.datosVuelta = {
+                                ret.datosVuelta = {
                                             title: 'Vuelo de Vuelta',
                                             empresa: 'Eurowings',
                                             origin: {
@@ -131,8 +133,10 @@ let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: 
                                     },
                                     price: $('#flightselection__inbound .a-price.a-price--large').first().text(),
                                     duration: $('#flightselection__inbound .m-ibe-flighttable__duration').first().text(),
+                                    url: `https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=${ida[x]}&origin=${vuelta[y]}&fromdate=${fechaVuelta}&triptype=oneway&adults=${adultos}&childs=${ninios}&infants=${bebes}&lng=es-ES#/reservar-vuelos/select`
                                 }
                                 ret.valid = true
+                                ret.url = url
                             }
                             browser.close()
                             resolve(ret)
@@ -157,7 +161,8 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
     let ret = {
         valid: '',
         datosIda: '',
-        datosVuelta: ''
+        datosVuelta: '',
+        url: ''
     }
     let adults = urlAdultosCzech(adultos);
     let nini = '';
@@ -168,59 +173,76 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
     if(bebes > 0){
         bebis = urlBebesCzech(bebes)
     }
-    let url = `https://book.csa.cz/plnext/czech_DX/Override.action?${adults}${nini}${bebis}TRIP_FLOW=YES&BOOKING_FLOW=REVENUE&B_LOCATION_1=${ida}&E_LOCATION_1=${vuelta}&B_DATE_1=${fechaIda}0000&B_ANY_TIME_1=TRUE&B_DATE_2=${fechaVuelta}0000&B_ANY_TIME_2=TRUE&TRIP_TYPE=R&B_LOCATION_2=MAD&E_LOCATION_2=BCN&SO_SITE_POINT_OF_SALE=MAD&SO_SITE_USER_CURRENCY_CODE=&SO_SITE_MARKET_ID=ES&PRICING_TYPE=O&EMBEDDED_TRANSACTION=FlexPricerAvailability&DISPLAY_TYPE=2&ARRANGE_BY=D&REFRESH=0&COMMERCIAL_FARE_FAMILY_1=CFFOKWEB&DATE_RANGE_VALUE_1=3&DATE_RANGE_VALUE_2=3&DATE_RANGE_QUALIFIER_1=C&DATE_RANGE_QUALIFIER_2=C&EXTERNAL_ID=172.1.2.3&SITE=P02YP02Y&LANGUAGE=ES&SO_SITE_INS_MARKET_COUNTRY=ES&SO_SITE_AIRLINE_CODE=OK&SO_SITE_IS_INSURANCE_ENABLED=TRUE#/FPOW`
+    let aeropuertos = await buscarIataAirport(ida,vuelta)
+    ida = aeropuertos.ida
+    vuelta = aeropuertos.vuelta
     try{
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.goto(url);
-        let setCzech = new Promise((resolve,reject) => {
-            setTimeout(async () => {
-                    let body = await page.content()
-                    const $ = cheerio.load(body)
-                    if($('#global-error-message').html() === null && $('#alert-title-global-warning-message').html() === null){
-                        ret.datosIda = {
-                            title: 'Vuelo de ida',
-                            empresa: $('.airline-name').first().text(),
-                            origin: {
-                                aeropuertoSalida: $('.flight-details-airport').first().text(),
-                                origen: $('.flight-details-city').first().html().split("</span> ")[1].split('\n')[0],
-                                horarioSalida: $('.flight-details-city').first().children().text().split('\n')[1],
-                                fechaSalida: $('.tripsummary-title.tripsummary-date.tripsummary-details').first().children().last().text()
-                            },
-                            destiny: {
-                                aeropuertoLlegada: $('.flight-details-arrival > .flight-details-airport').first().text(),
-                                destino: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[1],
-                                horarioLlegada: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[0]
-                            },
-                            price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('#tpl4_upsell-calendar-bound0_cell-price-selected-bound-0 .price').first().text(),
-                            duration: $('.duration').children().text().split(',')[0]
-                        }
-                        ret.datosVuelta = {
-                            title: 'Vuelo de Vuelta',
-                            empresa: $('.airline-name').first().text(),
-                            origin: {
-                                aeropuertoSalida: $('.flight-details-departure .flight-details-airport').last().text(),
-                                origen: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[1],
-                                horarioSalida: $('.flight-details-departure .flight-details-city').last().html().split('</span> ')[0].split('\n')[2],
-                                fechaSalida: $('.tripsummary-title.tripsummary-date.tripsummary-details').last().children().last().text()
-                            },
-                            destiny: {
-                                aeropuertoLlegada: $('.flight-details-arrival > .flight-details-airport').last().text(),
-                                destino: $('.flight-details-arrival > .flight-details-city').last().text().split(' ')[1],
-                                horarioLlegada: $('.flight-details-arrival > .flight-details-city').last().text().split(' ')[0]
-                            },
-                            price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('#tpl4_upsell-calendar-bound1_cell-price-selected-bound-1 .price').last().text(),
-                            duration: $('.duration').children().last().text().split(',')[0]
-                    
-                        }
-                        ret.valid = true
-                    } else {
-                        ret.valid = false
-                    }
-                    browser.close()
-                    resolve(ret)
-                },5000)
-            })
+        let setCzech;
+        for(x = 0; x < ida.length; x++){
+            for(y = 0; y < vuelta.length; y++){
+                let url = `https://book.csa.cz/plnext/czech_DX/Override.action?${adults}${nini}${bebis}TRIP_FLOW=YES&BOOKING_FLOW=REVENUE&B_LOCATION_1=${ida[x]}&E_LOCATION_1=${vuelta[y]}&B_DATE_1=${fechaIda}0000&B_ANY_TIME_1=TRUE&B_DATE_2=${fechaVuelta}0000&B_ANY_TIME_2=TRUE&TRIP_TYPE=R&B_LOCATION_2=MAD&E_LOCATION_2=BCN&SO_SITE_POINT_OF_SALE=MAD&SO_SITE_USER_CURRENCY_CODE=&SO_SITE_MARKET_ID=ES&PRICING_TYPE=O&EMBEDDED_TRANSACTION=FlexPricerAvailability&DISPLAY_TYPE=2&ARRANGE_BY=D&REFRESH=0&COMMERCIAL_FARE_FAMILY_1=CFFOKWEB&DATE_RANGE_VALUE_1=3&DATE_RANGE_VALUE_2=3&DATE_RANGE_QUALIFIER_1=C&DATE_RANGE_QUALIFIER_2=C&EXTERNAL_ID=172.1.2.3&SITE=P02YP02Y&LANGUAGE=ES&SO_SITE_INS_MARKET_COUNTRY=ES&SO_SITE_AIRLINE_CODE=OK&SO_SITE_IS_INSURANCE_ENABLED=TRUE#/FPOW`
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(url);
+                setCzech = new Promise((resolve,reject) => {
+                    setTimeout(async () => {
+                        let body = await page.content()
+                        const $ = cheerio.load(body)
+                        if($('#global-error-message').html() === null && $('#alert-title-global-warning-message').html() === null){
+                                ret.datosIda = {
+                                    title: 'Vuelo de ida',
+                                    empresa: 'Czech Airlines',
+                                    origin: {
+                                        aeropuertoSalida: $('.flight-details-airport').first().text(),
+                                        origen: $('.flight-details-city').first().html().split("</span> ")[1].split('\n')[0],
+                                        horarioSalida: $('.flight-details-city').first().children().text().split('\n')[1],
+                                        fechaSalida: $('.tripsummary-title.tripsummary-date.tripsummary-details').first().children().last().text()
+                                    },
+                                    destiny: {
+                                        aeropuertoLlegada: $('.flight-details-arrival > .flight-details-airport').first().text(),
+                                        destino: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[1],
+                                        horarioLlegada: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[0]
+                                    },
+                                    price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('#tpl4_upsell-calendar-bound0_cell-price-selected-bound-0 .price').first().text(),
+                                    duration: $('.duration').children().text().split(',')[0],
+                                    url: `https://book.csa.cz/plnext/czech_DX/Override.action?${adults}${nini}${bebis}&TRIP_FLOW=YES&BOOKING_FLOW=REVENUE&B_LOCATION_1=${ida[x]}&E_LOCATION_1=${vuelta[y]}&B_DATE_1=${fechaIda}0000&B_ANY_TIME_1=TRUE&TRIP_TYPE=O&SO_SITE_POINT_OF_SALE=MAD&SO_SITE_USER_CURRENCY_CODE=&SO_SITE_MARKET_ID=ES&PRICING_TYPE=O&EMBEDDED_TRANSACTION=FlexPricerAvailability&DISPLAY_TYPE=2&ARRANGE_BY=D&REFRESH=0&COMMERCIAL_FARE_FAMILY_1=CFFOKWEB&DATE_RANGE_VALUE_1=3&DATE_RANGE_VALUE_2=3&DATE_RANGE_QUALIFIER_1=C&DATE_RANGE_QUALIFIER_2=C&EXTERNAL_ID=172.1.2.3&SITE=P02YP02Y&LANGUAGE=ES&SO_SITE_INS_MARKET_COUNTRY=ES&SO_SITE_AIRLINE_CODE=OK&SO_SITE_IS_INSURANCE_ENABLED=TRUE#/FPOW`
+                                }
+                                ret.datosVuelta = {
+                                    title: 'Vuelo de Vuelta',
+                                    empresa: 'Czech Airlines',
+                                    origin: {
+                                        aeropuertoSalida: $('.flight-details-departure .flight-details-airport').last().text(),
+                                        origen: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[1],
+                                        horarioSalida: $('.flight-details-departure .flight-details-city').last().html().split('</span> ')[0].split('\n')[2],
+                                        fechaSalida: $('.tripsummary-title.tripsummary-date.tripsummary-details').last().children().last().text()
+                                    },
+                                    destiny: {
+                                        aeropuertoLlegada: $('.flight-details-arrival > .flight-details-airport').last().text(),
+                                        destino: $('.flight-details-arrival > .flight-details-city').last().text().split(' ')[1],
+                                        horarioLlegada: $('.flight-details-arrival > .flight-details-city').last().text().split(' ')[0]
+                                    },
+                                    price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('#tpl4_upsell-calendar-bound1_cell-price-selected-bound-1 .price').last().text(),
+                                    duration: $('.duration').children().last().text().split(',')[0]
+                                    
+                                }
+                                ret.valid = true
+                                ret.url = url
+                            } else {
+                                ret.valid = false
+                            }
+                            browser.close()
+                            resolve(ret)
+                        },5000)
+                    })
+                await setCzech
+                if(ret.valid){
+                    break;
+                }
+            }
+            if(ret.valid){
+                break;
+            }
+        }
         return setCzech
     }catch(err){
         throw err
@@ -261,7 +283,7 @@ let compararPreciosIda = (aerolineas) => {
 let compararPreciosVuelta = (aerolineas) => {
     let validCzech = aerolineas[1].valid
     let validEuro = aerolineas[0].valid
-
+    
     if(validCzech && validEuro){
         let czech = aerolineas[1].datosVuelta
         let czechPrice = czech.price.split(' ')[1].replace(',','.')
@@ -294,7 +316,8 @@ let buscarVuelos = async (res,datos) => {
     let final = {
         val: '',
         objetoIda : '',
-        objetoVuelta : ''
+        objetoVuelta : '',
+        url: []
     }
     try{
         let euroW = await scrapearDatosEuroWings(res,datos)
@@ -317,6 +340,14 @@ let buscarVuelos = async (res,datos) => {
             final.val = true
             final.objetoIda = idaVal
             final.objetoVuelta = vueltaVal
+        }
+
+        if(final.objetoVuelta.empresa === 'Eurowings' && final.objetoIda.empresa === 'Eurowings'){
+            final.url.push(euroW.url)
+        } else if(final.objetoVuelta.empresa === 'Czech Airlines' && final.objetoIda.empresa === 'Czech Airlines') {
+            final.url.push(czechA.url)
+        } else{
+            final.url.push(final.objetoIda.url, final.objetoVuelta.url)
         }
         return final
 

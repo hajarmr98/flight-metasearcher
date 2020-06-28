@@ -50,7 +50,7 @@ let borrarVuelos = () => {
     }
 }
 
-let pintarVuelo = ({ title, empresa, origin, destiny, price,duration }) => {
+let pintarVuelo = ({ title, empresa, origin, destiny, price,duration },url) => {
      
     const { aeropuertoSalida, origen, horarioSalida, fechaSalida } = origin
     const { aeropuertoLlegada, destino, horarioLlegada} = destiny
@@ -129,18 +129,32 @@ let pintarVuelo = ({ title, empresa, origin, destiny, price,duration }) => {
     cajaVuelo.appendChild(cajaDuracion)
     cajaVuelo.appendChild(cajaVuelta)
     cajaVuelo.appendChild(cajaPrecio)
+    if(url.length === 1){
+        cajaVuelo.addEventListener('click', (e) => {
+            window.open(url[0],'_blank')
+        })
+    } else {
+        if(title === 'Vuelo de Ida'){
+            cajaVuelo.addEventListener('click', (e) => {
+                window.open(url[0],'_blank')
+            })
+        } else {
+            cajaVuelo.addEventListener('click', (e) => {
+                window.open(url[1],'_blank')
+            })
+        }
+    }
     $$main.appendChild(cajaVuelo)
 }
 
 let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
     let res = await fetch(`http://localhost:2424/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${bebes}`)
     let datos = await res.json()
-    console.log(datos)
     borrarVuelos();
     if(datos.val){
         document.getElementsByClassName('cargaI')[0].remove()
-        pintarVuelo(datos.objetoIda)
-        pintarVuelo(datos.objetoVuelta)
+        pintarVuelo(datos.objetoIda,datos.url)
+        pintarVuelo(datos.objetoVuelta,datos.url)
     }else {
         document.getElementsByClassName('cargaI')[0].remove()
         alert('No existen vuelos de esas caracteristicas')
