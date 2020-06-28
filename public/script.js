@@ -23,13 +23,12 @@ let pintarLoader = () => {
     let caja = document.createElement('div')
     let caja1 = document.createElement('div')
     let $p = document.createElement('p')
-    $p.innerText = 'Cargando Vuelos'
-    $p.style.position = 'relative'
-    $p.style.top = '50%'
-    $p.style.left = '45%'
-    caja1.style.width = '100vw'
-    caja1.style.height = '500px'
-    caja1.style.backgroundColor = 'black'
+    caja1.style.width = '70%'
+    caja1.style.margin = '0 auto'
+    caja1.style.padding = '30px, 30px'
+    caja1.style.textAlign = 'center'
+    caja1.style.height = '200px'
+    caja1.style.backgroundColor = 'rgba(0,0,0,.5)'
     caja.className = 'loader'
     caja1.className = 'cargaI'
     caja.animate([
