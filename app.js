@@ -31,13 +31,18 @@ let buscarIataAirport = async (origen,destino) => {
     }
     await axios.get(`http://api.aviationstack.com/v1/airports?access_key=4d2377c1cc06e752abf6cea753282908&city_iata_code=${origen}`)
     .then(res => {
-        response.ida = res.data.data[0].iata_code
+        response.ida = []
+        for(let x = 0; x < res.data.data.length; x++){
+            response.ida.push(res.data.data[x].iata_code)
+        }
     })
     await axios.get(`http://api.aviationstack.com/v1/airports?access_key=4d2377c1cc06e752abf6cea753282908&city_iata_code=${destino}`)
     .then(res => {
-        response.vuelta = res.data.data[0].iata_code
+        response.vuelta = []
+        for(let x = 0; x < res.data.data.length; x++){
+            response.vuelta.push(res.data.data[x].iata_code)
+        }
     })
-
     return response
 }
 
@@ -75,64 +80,73 @@ let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: 
         datosIda: '',
         datosVuelta: ''
     }
-    buscarIataAirport(ida,vuelta)
-    .then(res => {
-        ida = res.ida
-        vuelta = res.vuelta
-    } )
-    let url = `https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=${vuelta}&triptype=r&origin=${ida}&fromdate=${fechaIda}&todate=${fechaVuelta}&adults=${adultos}&childs=${ninios}&infants=${bebes}&lng=es-ES#/reservar-vuelos/select`
-    console.log(url)
+    let aeropuertos = await buscarIataAirport(ida,vuelta)
+    ida = aeropuertos.ida
+    vuelta = aeropuertos.vuelta
     try{
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.goto(url);
-        const setWings = new Promise((resolve,rej) => {
-                setTimeout(async() => {
-                    let body = await page.content()
-                    const $ = cheerio.load(body)
-                    if($('.a-message.a-message--invalid').length > 2 || $('.a-price.a-price--large').first().text() === ''){
-                        ret.valid = false
-                    }else{
-                        ret.datosIda = {
-                            title: 'Vuelo de ida',
-                            empresa: 'Eurowings',
-                            origin: {
-                                aeropuertoSalida: $('#flightselection__outbound .m-ibe-flighttable__station').first().text(), 
-                                origen: $('.m-form-autocomplete__prefix').first().text(),
-                                horarioSalida: $('.a-headline.a-headline--h4.t-spacing--0').html(),
-                                fechaSalida: $('.o-ibe-flightselection__navigation-action-date').text().substring(10, 20)
-                            },
-                            destiny: {
-                                    aeropuertoLlegada: $('#flightselection__outbound .m-ibe-flighttable__station').last().text(),
-                                    destino: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1],
-                                    horarioLlegada: $('#flightselection__outbound .a-headline.a-headline--h4.t-spacing--0').text().substring(5,10)
-                                },
-                                price: $('.a-price.a-price--large').first().text(),
-                                duration: $('.m-ibe-flighttable__item').first().text().split(' ')[1]
-                            }
-                            ret.datosVuelta = {
-                                    title: 'Vuelo de Vuelta',
+        let setWings;
+        for(let x = 0; x < ida.length; x++){
+            for(let y = 0; y < vuelta.length; y++){
+                let url = `https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=${vuelta[y]}&triptype=r&origin=${ida[x]}&fromdate=${fechaIda}&todate=${fechaVuelta}&adults=${adultos}&childs=${ninios}&infants=${bebes}&lng=es-ES#/reservar-vuelos/select`
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(url);
+                setWings = new Promise((resolve,rej) => {
+                        setTimeout(async() => {
+                            let body = await page.content()
+                            const $ = cheerio.load(body)
+                            if($('.a-message.a-message--invalid').length > 2 || $('.a-price.a-price--large').first().text() === ''){
+                                ret.valid = false
+                            }else{
+                                ret.datosIda = {
+                                    title: 'Vuelo de ida',
                                     empresa: 'Eurowings',
                                     origin: {
-                                            aeropuertoSalida: $('#flightselection__inbound .m-ibe-flighttable__station').first().text(),
-                                            origen: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1] ,
-                                            horarioSalida: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight .a-headline.a-headline--h4.t-spacing--0').first().text(),
-                                            fechaSalida: $('#flightselection__inbound .o-ibe-flightselection__navigation-action-date').text().substring(10, 19),
-                            },
-                            destiny: {
-                                    aeropuertoLlegada: $('#flightselection__inbound .m-ibe-flighttable__station').last().text(),
-                                    destino: $('.m-form-autocomplete__prefix').first().text(),
-                                    horarioLlegada: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight.m-ibe-flighttable__flight--right .a-headline.a-headline--h4.t-spacing--0').last().text(),
-                            },
-                            price: $('#flightselection__inbound .a-price.a-price--large').first().text(),
-                            duration: $('#flightselection__inbound .m-ibe-flighttable__duration').first().text(),
-                        }
-                        ret.valid = true
+                                        aeropuertoSalida: $('#flightselection__outbound .m-ibe-flighttable__station').first().text(), 
+                                        origen: $('.m-form-autocomplete__prefix').first().text(),
+                                        horarioSalida: $('.a-headline.a-headline--h4.t-spacing--0').html(),
+                                        fechaSalida: $('.o-ibe-flightselection__navigation-action-date').text().substring(10, 20)
+                                    },
+                                    destiny: {
+                                            aeropuertoLlegada: $('#flightselection__outbound .m-ibe-flighttable__station').last().text(),
+                                            destino: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1],
+                                            horarioLlegada: $('#flightselection__outbound .a-headline.a-headline--h4.t-spacing--0').text().substring(5,10)
+                                        },
+                                        price: $('.a-price.a-price--large').first().text(),
+                                        duration: $('.m-ibe-flighttable__item').first().text().split(' ')[1]
+                                    }
+                                    ret.datosVuelta = {
+                                            title: 'Vuelo de Vuelta',
+                                            empresa: 'Eurowings',
+                                            origin: {
+                                                    aeropuertoSalida: $('#flightselection__inbound .m-ibe-flighttable__station').first().text(),
+                                                    origen: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1] ,
+                                                    horarioSalida: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight .a-headline.a-headline--h4.t-spacing--0').first().text(),
+                                                    fechaSalida: $('#flightselection__inbound .o-ibe-flightselection__navigation-action-date').text().substring(10, 19),
+                                    },
+                                    destiny: {
+                                            aeropuertoLlegada: $('#flightselection__inbound .m-ibe-flighttable__station').last().text(),
+                                            destino: $('.m-form-autocomplete__prefix').first().text(),
+                                            horarioLlegada: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight.m-ibe-flighttable__flight--right .a-headline.a-headline--h4.t-spacing--0').last().text(),
+                                    },
+                                    price: $('#flightselection__inbound .a-price.a-price--large').first().text(),
+                                    duration: $('#flightselection__inbound .m-ibe-flighttable__duration').first().text(),
+                                }
+                                ret.valid = true
+                            }
+                            browser.close()
+                            resolve(ret)
+                        }, 6000)
+                    })
+                    await setWings
+                    if(ret.valid){
+                        break;
                     }
-                    browser.close()
-                    resolve(ret)
-            }, 6000)
-        })
+            }
+            if(ret.valid){
+                break;
+            }
+        }
         return setWings
     }catch(err){
         throw err
@@ -155,7 +169,6 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
         bebis = urlBebesCzech(bebes)
     }
     let url = `https://book.csa.cz/plnext/czech_DX/Override.action?${adults}${nini}${bebis}TRIP_FLOW=YES&BOOKING_FLOW=REVENUE&B_LOCATION_1=${ida}&E_LOCATION_1=${vuelta}&B_DATE_1=${fechaIda}0000&B_ANY_TIME_1=TRUE&B_DATE_2=${fechaVuelta}0000&B_ANY_TIME_2=TRUE&TRIP_TYPE=R&B_LOCATION_2=MAD&E_LOCATION_2=BCN&SO_SITE_POINT_OF_SALE=MAD&SO_SITE_USER_CURRENCY_CODE=&SO_SITE_MARKET_ID=ES&PRICING_TYPE=O&EMBEDDED_TRANSACTION=FlexPricerAvailability&DISPLAY_TYPE=2&ARRANGE_BY=D&REFRESH=0&COMMERCIAL_FARE_FAMILY_1=CFFOKWEB&DATE_RANGE_VALUE_1=3&DATE_RANGE_VALUE_2=3&DATE_RANGE_QUALIFIER_1=C&DATE_RANGE_QUALIFIER_2=C&EXTERNAL_ID=172.1.2.3&SITE=P02YP02Y&LANGUAGE=ES&SO_SITE_INS_MARKET_COUNTRY=ES&SO_SITE_AIRLINE_CODE=OK&SO_SITE_IS_INSURANCE_ENABLED=TRUE#/FPOW`
-    console.log(url)
     try{
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
@@ -218,7 +231,7 @@ let compararPreciosIda = (aerolineas) => {
 
     let validCzech = aerolineas[1].valid
     let validEuro = aerolineas[0].valid
-
+    
     if(validCzech && validEuro){
         let czech = aerolineas[1].datosIda
         let czechPrice = czech.price.split(' ')[1].replace(',','.')
@@ -257,13 +270,13 @@ let compararPreciosVuelta = (aerolineas) => {
         let euro = aerolineas[0].datosVuelta
         let euroPrice = euro.price.split(' ')[0].replace(',','.')
         let euroIntegerIda = parseFloat(euroPrice)
-        
         if (czechIntegerIda > euroIntegerIda) {
+
         return aerolineas[0].datosVuelta
         } else if (euroIntegerIda > czechIntegerIda) {
          return aerolineas[1].datosVuelta
         } else {
-          return aerolineas[Math.floor(Math.random() * 2)]
+          return aerolineas[Math.floor(Math.random() * 2)].datosVuelta
         }
 
     }else if(validCzech && !validEuro) {
@@ -294,7 +307,6 @@ let buscarVuelos = async (res,datos) => {
         let vueltaVal = compararPreciosVuelta(aerolineas)
         if(!idaVal && !vueltaVal){
             final.val = false
-            return final
         } else if(!idaVal){
             final.val = true
             final.objetoVuelta = vueltaVal

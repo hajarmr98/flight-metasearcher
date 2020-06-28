@@ -135,6 +135,7 @@ let pintarVuelo = ({ title, empresa, origin, destiny, price,duration }) => {
 let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
     let res = await fetch(`http://localhost:2424/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${bebes}`)
     let datos = await res.json()
+    console.log(datos)
     borrarVuelos();
     if(datos.val){
         document.getElementsByClassName('cargaI')[0].remove()
