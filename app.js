@@ -222,7 +222,8 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
                                         horarioLlegada: $('.flight-details-arrival > .flight-details-city').last().text().split(' ')[0]
                                     },
                                     price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('#tpl4_upsell-calendar-bound1_cell-price-selected-bound-1 .price').last().text(),
-                                    duration: $('.duration').children().last().text().split(',')[0]
+                                    duration: $('.duration').children().last().text().split(',')[0],
+                                    url: `https://book.csa.cz/plnext/czech_DX/Override.action?${adults}${nini}${bebis}&TRIP_FLOW=YES&BOOKING_FLOW=REVENUE&B_LOCATION_1=${vuelta[y]}&E_LOCATION_1=${ida[x]}&B_DATE_1=${fechaVuelta}0000&B_ANY_TIME_1=TRUE&TRIP_TYPE=O&SO_SITE_POINT_OF_SALE=MAD&SO_SITE_USER_CURRENCY_CODE=&SO_SITE_MARKET_ID=ES&PRICING_TYPE=O&EMBEDDED_TRANSACTION=FlexPricerAvailability&DISPLAY_TYPE=2&ARRANGE_BY=D&REFRESH=0&COMMERCIAL_FARE_FAMILY_1=CFFOKWEB&DATE_RANGE_VALUE_1=3&DATE_RANGE_VALUE_2=3&DATE_RANGE_QUALIFIER_1=C&DATE_RANGE_QUALIFIER_2=C&EXTERNAL_ID=172.1.2.3&SITE=P02YP02Y&LANGUAGE=ES&SO_SITE_INS_MARKET_COUNTRY=ES&SO_SITE_AIRLINE_CODE=OK&SO_SITE_IS_INSURANCE_ENABLED=TRUE#/FPOW`
                                     
                                 }
                                 ret.valid = true
