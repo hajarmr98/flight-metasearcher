@@ -369,7 +369,7 @@ let buscarVuelos = async (res,datos) => {
 
 server.get('/', (req, res) => res.sendfile(__dirname + '/index.html'))
 
-server.get('http://whispering-beyond-10978.herokuapp.com/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2/:vuelta/kids/:ninios/age/:bebes',(req,res) => {
+server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2/:vuelta/kids/:ninios/age/:bebes',(req,res) => {
     let collectData = {
         origen: req.params.origen,
         destino: req.params.destino,
