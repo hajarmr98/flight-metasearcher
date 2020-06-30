@@ -147,6 +147,26 @@ let pintarVuelo = ({ title, empresa, origin, destiny, price,duration },url) => {
     $$main.appendChild(cajaVuelo)
 }
 
+let pintarAlert = () => {
+    let $main = document.getElementsByTagName('main')[0]
+    let alert = document.createElement('section');
+    alert.setAttribute('class','alert')
+    let $p = document.createElement('p')
+    $p.innerText = 'No se han encontrado vuelos con esas características'
+    let btn = document.createElement('button')
+    let $img = document.createElement('img')
+    $img.setAttribute('src','img/sadcat.gif')
+    btn.innerText = 'Volver a buscar'
+    btn.addEventListener('click', () => {
+       location.reload()
+    })
+    alert.appendChild($p)
+    alert.appendChild($img)
+    alert.appendChild(btn)
+    $main.appendChild(alert)
+
+}
+
 let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
     let res = await fetch(`http://localhost:2424/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${bebes}`)
     let datos = await res.json()
@@ -157,7 +177,7 @@ let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes
         pintarVuelo(datos.objetoVuelta,datos.url)
     }else {
         document.getElementsByClassName('cargaI')[0].remove()
-        alert('No existen vuelos de esas caracteristicas')
+        pintarAlert()
     }
 }
 
@@ -166,7 +186,7 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     let vuelo = recolectarDatos()
 
     if (!comprobarDatos(vuelo)) {
-        alert('Rellena los datos')
+        alert('Rellena todos los datos')
     } else {
         // new FormData(document.getElementsByTagName('form')[0])
         pintarLoader()

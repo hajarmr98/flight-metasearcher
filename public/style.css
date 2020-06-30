@@ -4,7 +4,7 @@ h1 {
 }
 
 body {
-    background-image: url("img/vuelo.jpg");
+    background-image: url("img/fondoAvion.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     color: whitesmoke;
@@ -218,6 +218,35 @@ input {
     border-bottom: 4px solid #4e4a4c;
     border-top: 4px solid #15412c;
     border-radius: 50%;
+}
+
+.alert {
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 70vw;
+    height: 500px;
+    display: flex;
+    flex-flow: column wrap;
+    background-color: rgba(172, 184, 122,.7);
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.alert p {
+    font-size: 24px;
+    color: black;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.alert button {
+    width: 30%;
+    height: 30px;
+    background-color: rgb(69, 65, 94);
+    color: snow;
+    border-radius: 15px;
+    cursor: pointer;
 }
 
 @media (min-width: 768px) {}

@@ -10,15 +10,24 @@ server.use(express.static('public'))
 let buscarIata = async (origen,destino) => {
     let response = {
         ida:'',
-        vuelta:''
+        vuelta:'',
+        val: true
     }
     await axios.get(`http://api.aviationstack.com/v1/cities?access_key=0a652144617594796a7e6bc4758b9e35&city_name=${origen}`)
     .then(res => {
-        response.ida = res.data.data[0].iata_code
+        if(res.data.data.length === 0){
+            response.val = false
+        } else {
+            response.ida = res.data.data[0].iata_code
+        }
     })
     await axios.get(`http://api.aviationstack.com/v1/cities?access_key=0a652144617594796a7e6bc4758b9e35&city_name=${destino}`)
     .then(res => {
-        response.vuelta = res.data.data[0].iata_code
+        if(res.data.data.length === 0){
+            response.val = false
+        }else {
+            response.vuelta = res.data.data[0].iata_code
+        }
     })
 
     return response
@@ -374,7 +383,12 @@ server.get('/flights/from/:origen/to/:destino/date_1/:ida/adults/:adultos/date_2
     buscarIata(collectData.origen,collectData.destino)
     .then(async resp => {
         try{
-           let vueloMasBarat = await buscarVuelos(resp,collectData)
+            let vueloMasBarat;
+            if(resp.val){
+                vueloMasBarat = await buscarVuelos(resp,collectData)
+            }else {
+                vueloMasBarat = resp
+            }
            res.send(vueloMasBarat)
         } catch(err) {
             console.log(err)
