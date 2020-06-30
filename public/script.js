@@ -168,7 +168,7 @@ let pintarAlert = () => {
 }
 
 let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
-    let res = await fetch(`https://whispering-beyond-10978.herokuapp.com:80/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${bebes}`)
+    let res = await fetch(`http://whispering-beyond-10978.herokuapp.com:80/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${bebes}`)
     let datos = await res.json()
     borrarVuelos();
     if(datos.val){
