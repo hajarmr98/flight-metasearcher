@@ -9,8 +9,8 @@ let comprobarDatos = ({ origen, destino, ida, vuelta, adultos }) => {
 
 let recolectarDatos = () => {
     return {
-        origen: document.getElementById('vuelo-origen').value.charAt(0).toUpperCase() + document.getElementById('vuelo-origen').value.slice(1),
-        destino: document.getElementById('vuelo-vuelta').value.charAt(0).toUpperCase() + document.getElementById('vuelo-vuelta').value.slice(1),
+        origen: document.getElementById('vuelo-origen').value.charAt(0).toUpperCase() + document.getElementById('vuelo-origen').value.slice(1).toLowerCase(),
+        destino: document.getElementById('vuelo-vuelta').value.charAt(0).toUpperCase() + document.getElementById('vuelo-vuelta').value.slice(1).toLowerCase(),
         ida: document.getElementById('fechaida').value,
         vuelta: document.getElementById('fechavuelta').value,
         adultos: document.getElementById('adultos').value,
