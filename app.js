@@ -98,7 +98,9 @@ let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: 
         for(let x = 0; x < ida.length; x++){
             for(let y = 0; y < vuelta.length; y++){
                 let url = `https://www.eurowings.com/es/reservar/vuelos/busqueda-de-vuelos.html?destination=${vuelta[y]}&triptype=r&origin=${ida[x]}&fromdate=${fechaIda}&todate=${fechaVuelta}&adults=${adultos}&childs=${ninios}&infants=${bebes}&lng=es-ES#/reservar-vuelos/select`
-                const browser = await puppeteer.launch();
+                const browser = await puppeteer.launch({
+                    args: ['--no-sandbox', '--disable-setuid-sandbox']
+                });
                 const page = await browser.newPage();
                 await page.goto(url);
                 setWings = new Promise((resolve,rej) => {
