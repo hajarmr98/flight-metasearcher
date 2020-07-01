@@ -332,38 +332,34 @@ let buscarVuelos = async (res,datos) => {
     }
     try{
         let euroW = await scrapearDatosEuroWings(res,datos)
-        final.objetoIda = euroW.datosIda
-        final.objetoVuelta = euroW.datosVuelta
-        final.url = euroW.url
-        final.val = true
-        // datos.ida = datos.ida.split('-').join('')
-        // datos.vuelta = datos.vuelta.split('-').join('')
-        // let czechA = await scrapearDatosCzech(res,datos)
-        // aerolineas.push(euroW)
-        // aerolineas.push(czechA)
-        // let idaVal = compararPreciosIda(aerolineas)
-        // let vueltaVal = compararPreciosVuelta(aerolineas)
-        // if(!idaVal && !vueltaVal){
-        //     final.val = false
-        // } else if(!idaVal){
-        //     final.val = true
-        //     final.objetoVuelta = vueltaVal
-        // } else if(!vueltaVal){
-        //     final.val = true
-        //     final.objetoIda = idaVal
-        // } else {
-        //     final.val = true
-        //     final.objetoIda = idaVal
-        //     final.objetoVuelta = vueltaVal
-        // }
+        datos.ida = datos.ida.split('-').join('')
+        datos.vuelta = datos.vuelta.split('-').join('')
+        let czechA = await scrapearDatosCzech(res,datos)
+        aerolineas.push(euroW)
+        aerolineas.push(czechA)
+        let idaVal = compararPreciosIda(aerolineas)
+        let vueltaVal = compararPreciosVuelta(aerolineas)
+        if(!idaVal && !vueltaVal){
+            final.val = false
+        } else if(!idaVal){
+            final.val = true
+            final.objetoVuelta = vueltaVal
+        } else if(!vueltaVal){
+            final.val = true
+            final.objetoIda = idaVal
+        } else {
+            final.val = true
+            final.objetoIda = idaVal
+            final.objetoVuelta = vueltaVal
+        }
 
-        // if(final.objetoVuelta.empresa === 'Eurowings' && final.objetoIda.empresa === 'Eurowings'){
-        //     final.url.push(euroW.url)
-        // } else if(final.objetoVuelta.empresa === 'Czech Airlines' && final.objetoIda.empresa === 'Czech Airlines') {
-        //     final.url.push(czechA.url)
-        // } else{
-        //     final.url.push(final.objetoIda.url, final.objetoVuelta.url)
-        // }
+        if(final.objetoVuelta.empresa === 'Eurowings' && final.objetoIda.empresa === 'Eurowings'){
+            final.url.push(euroW.url)
+        } else if(final.objetoVuelta.empresa === 'Czech Airlines' && final.objetoIda.empresa === 'Czech Airlines') {
+            final.url.push(czechA.url)
+        } else{
+            final.url.push(final.objetoIda.url, final.objetoVuelta.url)
+        }
 
     } catch(err){
         final.err = err;
