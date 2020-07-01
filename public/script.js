@@ -209,15 +209,7 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     if (!comprobarDatos(vuelo)) {
         alert('Rellena todos los datos')
     } else {
-
         pintarLoader()
-        let timer = new Promise((resolve,reject) => {
-            setTimeout(buscadorAvion(vuelo),120000)
-            resolve(true)
-        })
-            await timer
-        if(document.getElementsByClassName('caja-vuelo').length === 0){
-            pintarError()
-        }
+        buscadorAvion(vuelo)
     }
 })
