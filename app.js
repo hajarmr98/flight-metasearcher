@@ -190,7 +190,9 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
         for(x = 0; x < ida.length; x++){
             for(y = 0; y < vuelta.length; y++){
                 let url = `https://book.csa.cz/plnext/czech_DX/Override.action?${adults}${nini}${bebis}TRIP_FLOW=YES&BOOKING_FLOW=REVENUE&B_LOCATION_1=${ida[x]}&E_LOCATION_1=${vuelta[y]}&B_DATE_1=${fechaIda}0000&B_ANY_TIME_1=TRUE&B_DATE_2=${fechaVuelta}0000&B_ANY_TIME_2=TRUE&TRIP_TYPE=R&B_LOCATION_2=MAD&E_LOCATION_2=BCN&SO_SITE_POINT_OF_SALE=MAD&SO_SITE_USER_CURRENCY_CODE=&SO_SITE_MARKET_ID=ES&PRICING_TYPE=O&EMBEDDED_TRANSACTION=FlexPricerAvailability&DISPLAY_TYPE=2&ARRANGE_BY=D&REFRESH=0&COMMERCIAL_FARE_FAMILY_1=CFFOKWEB&DATE_RANGE_VALUE_1=3&DATE_RANGE_VALUE_2=3&DATE_RANGE_QUALIFIER_1=C&DATE_RANGE_QUALIFIER_2=C&EXTERNAL_ID=172.1.2.3&SITE=P02YP02Y&LANGUAGE=ES&SO_SITE_INS_MARKET_COUNTRY=ES&SO_SITE_AIRLINE_CODE=OK&SO_SITE_IS_INSURANCE_ENABLED=TRUE#/FPOW`
-                const browser = await puppeteer.launch();
+                const browser = await puppeteer.launch({
+                    args: ['--no-sandbox', '--disable-setuid-sandbox']
+                });
                 const page = await browser.newPage();
                 await page.goto(url);
                 setCzech = new Promise((resolve,reject) => {
