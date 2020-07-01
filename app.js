@@ -83,7 +83,7 @@ let urlBebesCzech = (num) => {
     return res
 }
 
-let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fechaVuelta,ninios,bebes}) => {
+let scrapearDatosEuroWings = async ({ida,vuelta},{origen: ori, destino: desti,ida: fechaIda,adultos,vuelta: fechaVuelta,ninios,bebes}) => {
     let ret = {
         valid: '',
         datosIda: '',
@@ -115,13 +115,13 @@ let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: 
                                     empresa: 'Eurowings',
                                     origin: {
                                         aeropuertoSalida: $('#flightselection__outbound .m-ibe-flighttable__station').first().text(), 
-                                        origen: $('.m-form-autocomplete__prefix').first().text(),
+                                        origen: ori,
                                         horarioSalida: $('.a-headline.a-headline--h4.t-spacing--0').html(),
                                         fechaSalida: $('.o-ibe-flightselection__navigation-action-date').text().substring(10, 20)
                                     },
                                     destiny: {
                                             aeropuertoLlegada: $('#flightselection__outbound .m-ibe-flighttable__station').last().text(),
-                                            destino: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1],
+                                            destino: desti,
                                             horarioLlegada: $('#flightselection__outbound .a-headline.a-headline--h4.t-spacing--0').text().substring(5,10)
                                         },
                                         price: $('.a-price.a-price--large').first().text(),
@@ -133,13 +133,13 @@ let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: 
                                             empresa: 'Eurowings',
                                             origin: {
                                                     aeropuertoSalida: $('#flightselection__inbound .m-ibe-flighttable__station').first().text(),
-                                                    origen: $('.a-headline.a-headline--h4.t-spacing--5').first().text().split('- ')[1] ,
+                                                    origen: desti ,
                                                     horarioSalida: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight .a-headline.a-headline--h4.t-spacing--0').first().text(),
                                                     fechaSalida: $('#flightselection__inbound .o-ibe-flightselection__navigation-action-date').text().substring(10, 19),
                                     },
                                     destiny: {
                                             aeropuertoLlegada: $('#flightselection__inbound .m-ibe-flighttable__station').last().text(),
-                                            destino: $('.m-form-autocomplete__prefix').first().text(),
+                                            destino: ori,
                                             horarioLlegada: $('#flightselection__inbound .m-ibe-flighttable__item-cell.m-ibe-flighttable__flight.m-ibe-flighttable__flight--right .a-headline.a-headline--h4.t-spacing--0').last().text(),
                                     },
                                     price: $('#flightselection__inbound .a-price.a-price--large').first().text(),
@@ -168,7 +168,7 @@ let scrapearDatosEuroWings = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: 
     }
 }
 
-let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fechaVuelta,ninios,bebes}) => {
+let scrapearDatosCzech = async ({ida,vuelta},{origen: ori, destino: desti, ida: fechaIda,adultos,vuelta: fechaVuelta,ninios,bebes}) => {
     let ret = {
         valid: '',
         datosIda: '',
@@ -207,13 +207,13 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
                                     empresa: 'Czech Airlines',
                                     origin: {
                                         aeropuertoSalida: $('.flight-details-airport').first().text(),
-                                        origen: $('.flight-details-city').first().html().split("</span> ")[1].split('\n')[0],
+                                        origen: ori,
                                         horarioSalida: $('.flight-details-city').first().children().text().split('\n')[1],
                                         fechaSalida: $('.tripsummary-title.tripsummary-date.tripsummary-details').first().children().last().text()
                                     },
                                     destiny: {
                                         aeropuertoLlegada: $('.flight-details-arrival > .flight-details-airport').first().text(),
-                                        destino: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[1],
+                                        destino: desti,
                                         horarioLlegada: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[0]
                                     },
                                     price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('#tpl4_upsell-calendar-bound0_cell-price-selected-bound-0 .price').first().text(),
@@ -225,13 +225,13 @@ let scrapearDatosCzech = async ({ida,vuelta},{ida: fechaIda,adultos,vuelta: fech
                                     empresa: 'Czech Airlines',
                                     origin: {
                                         aeropuertoSalida: $('.flight-details-departure .flight-details-airport').last().text(),
-                                        origen: $('.flight-details-arrival > .flight-details-city').first().text().split(' ')[1],
+                                        origen: desti,
                                         horarioSalida: $('.flight-details-departure .flight-details-city').last().html().split('</span> ')[0].split('\n')[2],
                                         fechaSalida: $('.tripsummary-title.tripsummary-date.tripsummary-details').last().children().last().text()
                                     },
                                     destiny: {
                                         aeropuertoLlegada: $('.flight-details-arrival > .flight-details-airport').last().text(),
-                                        destino: $('.flight-details-arrival > .flight-details-city').last().text().split(' ')[1],
+                                        destino: ori,
                                         horarioLlegada: $('.flight-details-arrival > .flight-details-city').last().text().split(' ')[0]
                                     },
                                     price: $('.availability-group-cell-price > .cell-reco-currency').first().text() + ' ' + $('#tpl4_upsell-calendar-bound1_cell-price-selected-bound-1 .price').last().text(),

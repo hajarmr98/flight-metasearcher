@@ -167,6 +167,26 @@ let pintarAlert = () => {
 
 }
 
+let pintarError = () => {
+    let $main = document.getElementsByTagName('main')[0]
+    let alert = document.createElement('section');
+    alert.setAttribute('class','alert')
+    let $p = document.createElement('p')
+    $p.innerText = 'El tiempo de espera ha sido superado'
+    let btn = document.createElement('button')
+    let $img = document.createElement('img')
+    $img.setAttribute('src','img/conex.gif')
+    btn.innerText = 'Volver a buscar'
+    btn.addEventListener('click', () => {
+       location.reload()
+    })
+    alert.appendChild($p)
+    alert.appendChild($img)
+    alert.appendChild(btn)
+    $main.appendChild(alert)
+
+}
+
 let buscadorAvion = async({ origen, destino, ida, vuelta, adultos, ninios, bebes }) => {
     let res = await fetch(`/flights/from/${origen}/to/${destino}/date_1/${ida}/adults/${adultos}/date_2/${vuelta}/kids/${ninios}/age/${bebes}`)
     let datos = await res.json()
@@ -189,59 +209,11 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     if (!comprobarDatos(vuelo)) {
         alert('Rellena todos los datos')
     } else {
-        // new FormData(document.getElementsByTagName('form')[0])
+
         pintarLoader()
-        buscadorAvion(vuelo)
+        setTimeout(buscadorAvion(vuelo),120000)
+        if(document.getElementsByClassName('caja-vuelo').length === 0){
+            pintarError()
+        }
     }
 })
-
-// document.getElementsByClassName('icon')[0].addEventListener('click', () => {
-//     console.log()
-//     console.log()
-//     let valueAntiguo = Number(document.getElementById('ninios').value)
-//     valueNuevo = String(valueAntiguo - 1)
-//     if (valueAntiguo > 0) {
-//         document.getElementById('ninios').value = valueNuevo
-//     }
-//     if (Number(document.getElementById('ninios').value) === 0) {
-//         document.getElementsByClassName('edad')[0].style.display = 'none'
-//         document.getElementsByClassName('edad')[1].style.display = 'none'
-//     }
-// })
-
-// document.getElementsByClassName('icon')[1].addEventListener('click', () => {
-//     let valueAntiguo = Number(document.getElementById('ninios').value)
-//     valueNuevo = String(valueAntiguo + 1)
-//     document.getElementById('ninios').value = valueNuevo
-//     if (Number(document.getElementById('ninios').value) > 0) {
-//         document.getElementsByClassName('edad')[0].style.display = 'block'
-//         document.getElementsByClassName('edad')[1].style.display = 'block'
-//     }
-// })
-
-
-
-
-// document.addEventListener("formdata", event => {
-
-//     let vuelo = {
-//         ida: event.target[0].value,
-//         vuelta: event.target[1].value,
-//         origen: event.target[2].value,
-//         destino: event.target[3].value,
-//         adultos: event.target[4].value,
-//         ninios: event.target[5].value,
-//         bebes: event.target[6].value,
-
-//     }
-
-//     const request = new XMLHttpRequest();
-//     request.open("GET", `http://127.0.0.1:5500/flights/from/${vuelo.origen}/to/${vuelo.destino}/date_1/${vuelo.ida}/adults/${vuelo.adultos}/date_2/${vuelo.vuelta}/kids/${vuelo.ninios}/babies/${vuelo.bebes}`);
-//     request.send(vuelo);
-//     // get the response
-//     request.onload = function() {
-//         const jsonResponse = JSON.parse(this.response);
-//         pintarVuelo(jsonResponse.datosIda)
-//         pintarVuelo(jsonResponse.datosVuelta)
-//     };
-// });
