@@ -214,7 +214,7 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
         setTimeout(() => {
             if (document.getElementsByClassName("loader")[0])
                 pintarError()
-        }, 130000)
+        }, 90000)
     }
 })
 
