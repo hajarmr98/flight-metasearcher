@@ -327,7 +327,8 @@ let buscarVuelos = async (res,datos) => {
         val: '',
         objetoIda : '',
         objetoVuelta : '',
-        url: []
+        url: [],
+        err: ''
     }
     try{
         let euroW = await scrapearDatosEuroWings(res,datos)
@@ -361,7 +362,7 @@ let buscarVuelos = async (res,datos) => {
         }
 
     } catch(err){
-        final.val = err;
+        final.err = err;
     } finally {
         return final
     }
