@@ -211,5 +211,11 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     } else {
         pintarLoader()
         buscadorAvion(vuelo)
+        setTimeout(() => {
+            if (document.getElementsByClassName("loader")[0])
+                pintarError()
+        }, 130000)
     }
 })
+
+

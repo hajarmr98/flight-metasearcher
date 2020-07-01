@@ -4,7 +4,6 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const axios = require('axios');
 const port = process.env.PORT || 80;
-// const port = 2424;
 
 server.use(express.static('public'))
 
