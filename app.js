@@ -359,11 +359,12 @@ let buscarVuelos = async (res,datos) => {
         } else{
             final.url.push(final.objetoIda.url, final.objetoVuelta.url)
         }
-        return final
 
     } catch(err){
-        console.log(err)
-    } 
+        final.val = err;
+    } finally {
+        return final
+    }
 }
 
 
