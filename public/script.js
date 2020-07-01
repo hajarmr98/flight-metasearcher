@@ -211,7 +211,11 @@ document.getElementsByTagName('form')[0].addEventListener('submit', (e) => {
     } else {
 
         pintarLoader()
-        setTimeout(buscadorAvion(vuelo),120000)
+        let timer = new Promise((resolve,reject) => {
+            setTimeout(buscadorAvion(vuelo),120000)
+            resolve(true)
+        })
+            await timer
         if(document.getElementsByClassName('caja-vuelo').length === 0){
             pintarError()
         }
