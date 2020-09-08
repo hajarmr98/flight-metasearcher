@@ -6,7 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "e2e": "cypress open",
-    "web": "node app.js",
     "start": "node app.js"
   },
   "repository": {
@@ -29,8 +28,5 @@
     "cherio": "^1.0.0-rc.2",
     "express": "^4.17.1",
     "puppeteer": "^4.0.0"
-  },
-  "engines": {
-    "node": "12.18.0"
   }
 }
